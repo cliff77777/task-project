@@ -3,27 +3,56 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
+
+
 
 class LoginController extends Controller
 {
-    public function index()
+    /*
+    |--------------------------------------------------------------------------
+    | Login Controller
+    |--------------------------------------------------------------------------
+    |
+    | This controller handles authenticating users for the application and
+    | redirecting them to your home screen. The controller uses a trait
+    | to conveniently provide its functionality to your applications.
+    |
+    */
+
+    use AuthenticatesUsers;
+
+    /**
+     * Where to redirect users after login.
+     *
+     * @var string
+     */
+    protected $redirectTo = '/home';
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
     {
-        return view('auth.login');
+        $this->middleware('guest')->except('logout');
+        $this->middleware('auth')->only('logout');
     }
-
-    public function login(Request $request)
+    protected function authenticated(Request $request, $user)
     {
-        $credentials = $request->only('email', 'password');
+        if (!$user->hasVerifiedEmail()) {
+            $this->guard()->logout();
 
-        if (Auth::attempt($credentials)) {
-            // 認證成功，生成 Passport 的 Access Token
-            $accessToken = Auth::user()->createToken('authToken')->accessToken;
-            return response()->json(['access_token' => $accessToken], 200);
+            $request->session()->invalidate();
+
+            $request->session()->regenerateToken();
+
+            throw ValidationException::withMessages([
+                'email' => ['You need to verify your email account before logging in.'],
+            ]);
         }
-
-        // 認證失敗處理
-        return response()->json(['error' => 'Unauthorized'], 401);
     }
 }

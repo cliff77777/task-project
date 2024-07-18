@@ -1,9 +1,8 @@
-// resources/sass/app.scss
+// Fonts
+@import url('https://fonts.bunny.net/css?family=Nunito');
 
-// 引入 Bootstrap（如果使用）
-@import "~bootstrap/scss/bootstrap";
+// Variables
+@import 'variables';
 
-// 自定義樣式
-body {
-    font-family: "Nunito", sans-serif;
-}
+// Bootstrap
+@import 'bootstrap/scss/bootstrap';

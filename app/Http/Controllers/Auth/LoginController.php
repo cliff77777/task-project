@@ -29,7 +29,10 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    // protected $redirectTo = '/home';
+    protected $EmailNotVerity = 1;
+
+
 
     /**
      * Create a new controller instance.
@@ -41,18 +44,12 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
         $this->middleware('auth')->only('logout');
     }
+
     protected function authenticated(Request $request, $user)
     {
-        if (!$user->hasVerifiedEmail()) {
-            $this->guard()->logout();
-
-            $request->session()->invalidate();
-
-            $request->session()->regenerateToken();
-
-            throw ValidationException::withMessages([
-                'email' => ['You need to verify your email account before logging in.'],
-            ]);
+        if(!$user->hasVerifiedEmail()){
+            $request->session()->put('status', $this->EmailNotVerity);
         }
+        return view('home');
     }
 }

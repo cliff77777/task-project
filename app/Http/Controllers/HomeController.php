@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+
 
 class HomeController extends Controller
 {
@@ -21,8 +23,14 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
+        Log::debug('home index');
+        if (!$request->user()->hasVerifiedEmail()) {
+            session()->put('status','Your email is not verified.');
+        }else{
+            session()->forget('status');
+        }
         return view('home');
     }
 }

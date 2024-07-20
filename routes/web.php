@@ -29,14 +29,16 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/login', [LoginController::class, 'index'])->name('login.index');
-Route::post('/login', [LoginController::class, 'login'])->name('login');
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login.index');//AuthenticatesUsers.showLoginForm
+Route::post('/login', [LoginController::class, 'login'])->name('login'); //AuthenticatesUsers.login
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->middleware('auth'); //AuthenticatesUsers.logout
+
 
 Auth::routes(['verify' => true]);
 Route::get('/register', [RegisterController::class, 'index'])->name('register.index');
 Route::post('/register', [RegisterController::class, 'register'])->name('register');
 Route::get('/check-email/{email}', [RegisterController::class, 'checkEmail'])->name('checkEmail');
-Route::get('/email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
+Route::post('/email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
 
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');

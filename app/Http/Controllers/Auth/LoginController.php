@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Log;
+
 
 
 
@@ -30,9 +32,6 @@ class LoginController extends Controller
      * @var string
      */
     // protected $redirectTo = '/home';
-    protected $EmailNotVerity = 1;
-
-
 
     /**
      * Create a new controller instance.
@@ -47,9 +46,10 @@ class LoginController extends Controller
 
     protected function authenticated(Request $request, $user)
     {
-        if(!$user->hasVerifiedEmail()){
-            $request->session()->put('status', $this->EmailNotVerity);
-        }
-        return view('home');
+
+        Log::debug('authenticated');
+
+        $view=$this->CheckMailVerifyForView($request);
+        return view($view);
     }
 }

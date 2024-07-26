@@ -26,11 +26,7 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         Log::debug('home index');
-        if (!$request->user()->hasVerifiedEmail()) {
-            session()->put('status','Your email is not verified.');
-        }else{
-            session()->forget('status');
-        }
-        return view('home');
+        $view=$this->CheckMailVerifyForView($request);
+        return view($view);
     }
 }

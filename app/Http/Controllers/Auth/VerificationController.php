@@ -48,11 +48,18 @@ class VerificationController extends Controller
      */
     public function resend(Request $request)
     {
-        if ($request->user()->hasVerifiedEmail()) {
-            return redirect()->route('home')->with('status', 'Your email is already verified.');
+        try {
+            if ($request->user()->hasVerifiedEmail()) {
+                setSessionMessageFromStatusCode('success','email_verified');
+            }else{
+                $request->user()->sendEmailVerificationNotification();
+                setSessionMessageFromStatusCode('success','verification_link_sent');
+            }
+            return redirect()->route('home');
+        }catch (\Exception $e) {
+            Log::error('Failed to send verification email: ' . $e->getMessage());
+            setSessionMessageFromStatusCode('error','send_verifity_fail');
+            return redirect()->route('error.error_index');
         }
-        $request->user()->sendEmailVerificationNotification();
-
-        return redirect()->route('home')->with('status', 'Verification link sent!');
     }
 }

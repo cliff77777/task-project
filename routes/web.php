@@ -20,6 +20,7 @@ use App\Http\Controllers\Auth\VerificationController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+Auth::routes(['verify' => true]);
 
 Route::get('/', function () {
     return view('welcome');
@@ -34,11 +35,13 @@ Route::post('/login', [LoginController::class, 'login'])->name('login'); //Authe
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->middleware('auth'); //AuthenticatesUsers.logout
 
 
-Auth::routes(['verify' => true]);
 Route::get('/register', [RegisterController::class, 'index'])->name('register.index');
 Route::post('/register', [RegisterController::class, 'register'])->name('register');
 Route::get('/check-email/{email}', [RegisterController::class, 'checkEmail'])->name('checkEmail');
+
 Route::post('/email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
 
 
+
 Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::get('/work_menu', [HomeController::class, 'work_menu'])->name('work_menu.index');

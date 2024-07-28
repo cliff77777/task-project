@@ -29,7 +29,4 @@ class HomeController extends Controller
         $view=$this->CheckMailVerifyForView($request);
         return view($view);
     }
-    public function work_menu(){
-        return view('work_menu.index');
-    }
 }

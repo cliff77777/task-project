@@ -35,8 +35,6 @@ class RegisterController extends Controller
 
         $validator = Validator::make($request->all(),$register_rule);
 
-        // Log::debug('test');
-
         if ($validator->fails()) {
             return redirect()->back()
                              ->withErrors($validator)
@@ -44,16 +42,8 @@ class RegisterController extends Controller
         }
 
         $user = $this->create($request->all());
-
         event(new Registered($user));
-
         return redirect('/login')->with('status', 'We have sent you an activation link. Check your email and click on the link to verify.');
-    }
-
-    public function checkEmail($email)
-    {
-        $exists = User::where('email', $email)->exists();
-        return response()->json(['exists' => $exists]);
     }
 
     protected function create(array $data)

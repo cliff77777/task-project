@@ -7,8 +7,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\VerificationController;
-
-
+use App\Http\Controllers\TaskController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,11 +36,21 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->midd
 
 Route::get('/register', [RegisterController::class, 'index'])->name('register.index');
 Route::post('/register', [RegisterController::class, 'register'])->name('register');
-Route::get('/check-email/{email}', [RegisterController::class, 'checkEmail'])->name('checkEmail');
+
+// Route::get('/check-email/{email}', [RegisterController::class, 'checkEmail'])->name('checkEmail');
 
 Route::post('/email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
 
 
-
 Route::get('/home', [HomeController::class, 'index'])->name('home');
-Route::get('/work_menu', [HomeController::class, 'work_menu'])->name('work_menu.index');
+
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/task_menu', [TaskController::class, 'menu_index'])->name('task_menu');
+    Route::group(['prefix'=>'task_menu'],function(){
+        Route::get('/task_index', [TaskController::class, 'task_index'])->name('task_index');
+        Route::get('/task_create', [TaskController::class, 'task_create'])->name('task_create');
+        Route::post('/task_update', [TaskController::class, 'task_update'])->name('task_update');
+        Route::post('/task_delete', [TaskController::class, 'task_delete'])->name('task_delete');
+    });
+});

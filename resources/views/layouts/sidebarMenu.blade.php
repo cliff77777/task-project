@@ -8,15 +8,15 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('work_menu.index') }}">
+                <a class="nav-link" href="{{ route('task_menu') }}">
                     <span data-feather="file"></span>
-                    Work Menu
+                    Task Menu
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="{{ route('task_create') }}">
                     <span data-feather="shopping-cart"></span>
-                    Add Issue Tickets
+                    Add Task Tickets
                 </a>
             </li>
             <li class="nav-item">

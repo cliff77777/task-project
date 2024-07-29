@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('task_files', function (Blueprint $table) {
+        Schema::create('task_notes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('task_id')->constrained('tasks');
-            $table->string('file_path');
+            $table->text('note')->nullable();
+            $table->decimal('actual_hours', 5, 1)->nullable();
             $table->timestamps();
         });
     }
@@ -24,10 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('task_files', function (Blueprint $table) {
-            $table->dropForeign(['task_id']);
-        });
-
-        Schema::dropIfExists('task_files');
+        Schema::dropIfExists('task_notes');
     }
 };

@@ -27,6 +27,13 @@ return new class extends Migration
      */
     public function down(): void
     {
+        // 先確保刪除所有引用此表的外鍵約束
+        Schema::disableForeignKeyConstraints();
+
+        // 然後刪除表
         Schema::dropIfExists('tasks');
+
+        // 重新啟用外鍵約束
+        Schema::enableForeignKeyConstraints();
     }
 };

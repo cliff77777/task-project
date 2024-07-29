@@ -8,4 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class TaskNote extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'task_id',
+        'note',
+        'actual_hours',
+    ];
+    
+    public function task()
+    {
+        return $this->belongsTo(Task::class);
+    }
 }

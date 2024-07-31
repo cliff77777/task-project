@@ -8,6 +8,8 @@ use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\TaskFileController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -21,13 +23,11 @@ use App\Http\Controllers\TaskController;
 */
 Auth::routes(['verify' => true]);
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('/',[HomeController::class, 'index'])->name('home.index');
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login.index');//AuthenticatesUsers.showLoginForm
 Route::post('/login', [LoginController::class, 'login'])->name('login'); //AuthenticatesUsers.login
@@ -44,13 +44,7 @@ Route::post('/email/resend', [VerificationController::class, 'resend'])->name('v
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-
 Route::middleware(['auth'])->group(function () {
-    Route::get('/task_menu', [TaskController::class, 'menu_index'])->name('task_menu');
-    Route::group(['prefix'=>'task_menu'],function(){
-        Route::get('/task_index', [TaskController::class, 'task_index'])->name('task_index');
-        Route::get('/task_create', [TaskController::class, 'task_create'])->name('task_create');
-        Route::post('/task_update', [TaskController::class, 'task_update'])->name('task_update');
-        Route::post('/task_delete', [TaskController::class, 'task_delete'])->name('task_delete');
-    });
+    Route::resource('tasks', TaskController::class);
+    Route::post('tasks/{task}/files', [TaskFileController::class, 'store'])->name('task_files.store');
 });

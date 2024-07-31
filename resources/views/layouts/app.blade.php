@@ -22,9 +22,12 @@
 <body>
     <div id="app">
         @include('layouts.navbar')
-        <main class="py-4">
+        <div class="row">
+            @auth
+                @include('layouts.sidebarMenu')
+            @endauth
             @yield('content')
-        </main>
+        </div>
     </div>
     <script src="{{ mix('js/app.js') }}"></script>
 </body>

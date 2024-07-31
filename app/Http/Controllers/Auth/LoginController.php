@@ -47,9 +47,9 @@ class LoginController extends Controller
     protected function authenticated(Request $request, $user)
     {
 
-        Log::debug('authenticated');
-
         $view=$this->CheckMailVerifyForView($request);
-        return view($view);
+        Log::debug('$view'.$view);
+
+        return redirect($view);
     }
 }

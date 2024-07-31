@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
+use App\Models\TaskNote;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -68,7 +70,8 @@ class TaskController extends Controller
     public function edit(Task $task)
     {
         $this->authorize('update', $task);
-        return view('tasks.edit', compact('task'));
+        $user=User::all();
+        return view('tasks.edit', compact('task','user'));
     }
 
     public function update(Request $request, Task $task)
@@ -96,5 +99,32 @@ class TaskController extends Controller
         return redirect()->route('tasks.index')->with('success', '工作單已刪除');
     }
 
+    public function create_task_note(Request $request, Task $task){
+        $request->validate([
+            'note'=>'require',
+            'actual_hours'=>'required|numeric'
+        ]);
+
+        TaskNote::create([
+            'task_id'=>$task->id,
+            'note'=>$request->note,
+            'actual_hours'=>$request->actual_hours,
+            'created_by'=>Auth::id(),
+        ]);
+
+        $this->check_file($request,$task,$request->hasFile('file'));
+
+        return redirect()->route('tasks.index')->with('success', '任務處理已更新');
+    }
+
+    public function check_file($request,$task,$hasfile=false){
+        if($hasfile){
+            $file_path = $this->fileService->saveFileToTaskFile($request->file('file'), 'taskfile/'.$task->id,$task->id);
+            $task->files()->saveMany($file_path);
+            if (is_array($file_path) && isset($file_path['error'])) {
+                return back()->withErrors($file_path['error']);
+            }
+        }
+    }
 
 }

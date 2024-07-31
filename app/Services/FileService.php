@@ -11,7 +11,7 @@ class FileService
 
     public function saveFileToTaskFile($files, $directory,$task_id)
     {
-        $allowedMimeTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+        $allowedMimeTypes = ['image/jpeg', 'image/png', 'application/pdf','form-data/xls'];
         $allowedMaxSize = 2048;  // 以 KB 為單位
         $paths = [];
 

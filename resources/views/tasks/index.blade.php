@@ -26,7 +26,13 @@
                         <td>{{ $task->description }}</td>
                         <td>{{ $task->estimated_hours }}</td>
                         <td>{{ $task->creator->name }}</td>
-                        <td>{{ $task->assignee->name ?? '未指派' }}</td>
+                        <td>
+                            @if (!empty($task->assignee->name))
+                                <a href="{{ route('tasks.edit', $task->id) }}"> {{ $task->assignee->name }}</a>
+                            @else
+                                <a href="{{ route('tasks.edit', $task->id) }}">未指派</a>
+                            @endif
+                        </td>
                         <td>
                             <a href="{{ route('tasks.show', $task->id) }}" class="btn btn-sm btn-info">任務處理</a>
                             @can('update', $task)

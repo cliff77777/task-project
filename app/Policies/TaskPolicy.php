@@ -52,6 +52,12 @@ class TaskPolicy
         return $user->role === 'admin';
     }
 
+    public function edit(User $user): bool
+    {
+        // 只有具有 'admin' 或 'manager' 角色的用戶可以創建任務
+        return $user->role === 'admin' || $user->role === 'manager';
+    }
+
     /**
      * Determine whether the user can restore the model.
      */

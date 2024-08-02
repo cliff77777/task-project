@@ -20,6 +20,8 @@
 </head>
 
 <body>
+    <script src="{{ asset('js/jquery.min.js') }}"></script>
+
     <div id="app">
         @include('layouts.navbar')
         <div class="row">
@@ -27,9 +29,10 @@
                 @include('layouts.sidebarMenu')
             @endauth
             @yield('content')
+            <script src="{{ mix('js/app.js') }}"></script>
+            @stack('scripts')
         </div>
     </div>
-    <script src="{{ mix('js/app.js') }}"></script>
 </body>
 
 </html>

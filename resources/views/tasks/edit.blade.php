@@ -4,7 +4,7 @@
     @can('edit', $task)
         <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-5">
             <h1>Edit Task</h1>
-            <form action="{{ route('tasks.update', $task->id) }}" method="POST">
+            <form action="{{ route('tasks.update', $task->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 
@@ -41,10 +41,9 @@
 
                 @if (!empty($task->files))
                     @foreach ($task->files as $file)
-                        .
                         <h4>已上傳檔案</h4>
                         <div class="mb-3">
-                            <a href="{{ Storage::url($file->path) }}">View File</a>
+                            <a href="{{ Storage::url($file->file_path) }}">View File</a>
                         </div>
                     @endforeach
                 @endif

@@ -41,7 +41,7 @@ return [
             'root' => storage_path('app/public'),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
-            'throw' => false,
+            'throw' => true,
         ],
 
         's3' => [
@@ -72,5 +72,24 @@ return [
     'links' => [
         public_path('storage') => storage_path('app/public'),
     ],
+
+    'allowed_file_type'=>[
+        'image/jpeg',
+        'image/png',
+        'image/gif',
+        'image/bmp',
+        'image/tiff',
+        'image/webp',
+        'image/svg+xml',
+        'application/pdf',
+        'application/x-www-form-urlencoded',
+        'application/vnd.ms-excel',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'application/msword',
+        'multipart/form-data',
+        'text/plain',
+    ],
+
+    'allowedMaxSize'=>4096,
 
 ];

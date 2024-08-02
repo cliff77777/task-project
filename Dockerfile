@@ -33,6 +33,10 @@ COPY . /var/www/html
 # 切換到 /var/www/html 目錄
 WORKDIR /var/www/html
 
+# 設置目錄權限
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+
 # 安裝 Laravel 依賴項，忽略 curl 擴展的要求
 RUN composer install --ignore-platform-req=ext-curl
 

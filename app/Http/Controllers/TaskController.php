@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use App\Services\FileService;
+use Illuminate\Support\Facades\Storage;
+
 
 
 class TaskController extends Controller
@@ -34,9 +36,7 @@ class TaskController extends Controller
     }
 
     public function store(Request $request)
-    {
-        Log::debug('in store');
-        
+    {        
         $request->validate([
             'subject' => 'required|string|max:255',
             'description' => 'required|string',
@@ -63,10 +63,11 @@ class TaskController extends Controller
 
     public function show(Task $task)
     {
-        Log::debug('in show');
         return view('tasks.show', compact('task'));
     }
 
+
+    //get edit page
     public function edit(Task $task)
     {
         $this->authorize('update', $task);
@@ -74,22 +75,39 @@ class TaskController extends Controller
         return view('tasks.edit', compact('task','user'));
     }
 
+    //post task update 
     public function update(Request $request, Task $task)
     {
+        Log::debug('in update');
+
         $this->authorize('update', $task);
 
         $request->validate([
-            'note' => 'nullable|string',
-            'actual_hours' => 'nullable|numeric',
+            'subject' => 'required|string|max:255',
+            'description' => 'required|string',
+            'estimated_hours' => 'required|numeric',
+            'file' => 'required|file|mimetypes:image/jpeg,image/png,image/gif,image/bmp,image/tiff,image/webp,image/svg+xml,application/pdf,application/x-www-form-urlencoded,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/msword,multipart/form-data,text/plain|max:2048',
         ]);
 
         $task->update([
-            'note' => $request->note,
-            'actual_hours' => $request->actual_hours,
+            'subject' => $request->subject,
+            'description' => $request->description,
+            'estimated_hours' => $request->estimated_hours,
+            'assigned_to' => $request->assigned_to,
         ]);
 
-        return redirect()->route('tasks.show', $task->id)->with('success', '工作單已更新');
+        $file = $request->file('file');
+
+        // return response()->json([
+        //     'file_path' => Storage::url($path),
+        // ]);
+
+
+        $check_file=$this->check_file($file,$task,$request->hasFile('file'));
+
+        return redirect()->route('tasks.index')->with('success', '工作單已更新');
     }
+
 
     public function destroy(Task $task)
     {
@@ -117,14 +135,18 @@ class TaskController extends Controller
         return redirect()->route('tasks.index')->with('success', '任務處理已更新');
     }
 
-    public function check_file($request,$task,$hasfile=false){
-        if($hasfile){
-            $file_path = $this->fileService->saveFileToTaskFile($request->file('file'), 'taskfile/'.$task->id,$task->id);
-            $task->files()->saveMany($file_path);
+    public function check_file($file,$task,$hasfile=false){
+        if ($hasfile) {
+            $file_path = $this->fileService->saveFileToTaskFile($file, 'taskfile/' . $task->id, $task->id);
+    
             if (is_array($file_path) && isset($file_path['error'])) {
                 return back()->withErrors($file_path['error']);
             }
+    
+            $task->files()->saveMany($file_path);
         }
+    
+        return null;
     }
 
 }

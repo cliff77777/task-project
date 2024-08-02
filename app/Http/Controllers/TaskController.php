@@ -86,7 +86,7 @@ class TaskController extends Controller
             'subject' => 'required|string|max:255',
             'description' => 'required|string',
             'estimated_hours' => 'required|numeric',
-            'file' => 'required|file|mimetypes:image/jpeg,image/png,image/gif,image/bmp,image/tiff,image/webp,image/svg+xml,application/pdf,application/x-www-form-urlencoded,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/msword,multipart/form-data,text/plain|max:2048',
+            'file' => 'file|mimetypes:image/jpeg,image/png,image/gif,image/bmp,image/tiff,image/webp,image/svg+xml,application/pdf,application/x-www-form-urlencoded,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/msword,multipart/form-data,text/plain|max:2048',
         ]);
 
         $task->update([

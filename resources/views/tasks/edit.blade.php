@@ -40,10 +40,21 @@
                 </div>
 
                 @if (!empty($task->files))
+                    <h4>已上傳檔案</h4>
                     @foreach ($task->files as $file)
-                        <h4>已上傳檔案</h4>
                         <div class="mb-3">
-                            <a href="{{ Storage::url($file->file_path) }}">View File</a>
+                            <a
+                                href="{{ Storage::url($file->file_path) }}">{{ $file->file_name ? $file->file_name : 'unknow' }}</a>
+                            {{ formatSizeUnits(Storage::size('public/' . $file->file_path)) }}
+
+                            <a href="{{ route('download_file', ['file_path' => $file->file_path]) }}" method='POST'
+                                class="btn-sm btn-info text-white me-1">Download
+                            </a>
+                            <a href="#"
+                                onclick="confirmDelete(event, '{{ route('delete_file', ['file_path' => $file->file_path]) }}')"
+                                class="btn-sm btn-danger">Delete
+                            </a>
+
                         </div>
                     @endforeach
                 @endif
@@ -57,3 +68,28 @@
         </div>
     @endcan
 @endsection
+@push('scripts')
+    <script>
+        function confirmDelete(event, url) {
+            event.preventDefault();
+            var confirmAction = confirm("Are you sure you want to delete this item?");
+            if (confirmAction) {
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: {
+                        _method: 'DELETE',
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        alert('Item deleted successfully.');
+                        location.reload()
+                    },
+                    error: function(xhr) {
+                        alert('An error occurred while deleting the item.');
+                    }
+                });
+            }
+        }
+    </script>
+@endpush

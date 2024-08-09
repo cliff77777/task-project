@@ -52,6 +52,9 @@
                             <a href="{{ route('tasks.show', $task->id) }}" class="btn btn-sm btn-info">任務處理</a>
                             @can('update', $task)
                                 <a href="{{ route('tasks.edit', $task->id) }}" class="btn btn-sm btn-warning">編輯</a>
+                                <a onclick="confirmCancel(event, '{{ route('task_cancel') }}', {{ $task->id }})"
+                                    class="btn-sm btn-danger">取消任務
+                                </a>
                             @endcan
                         </td>
                     </tr>
@@ -63,6 +66,28 @@
 
     @push('scripts')
         <script>
+            function confirmCancel(event, url, task_id) {
+                event.preventDefault();
+                var confirmAction = confirm("Are you sure you want to cancel this task?");
+                if (confirmAction) {
+                    console.log(task_id);
+                    $.ajax({
+                        url: url,
+                        type: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            'id': task_id
+                        },
+                        success: function(response) {
+                            alert(response.message);
+                            location.reload()
+                        },
+                        error: function(xhr) {
+                            alert('An error occurred while cancel the task.');
+                        }
+                    });
+                }
+            }
             $(document).ready(function() {
                 // 自動隱藏成功提示
                 var successAlert = $('#successAlert');

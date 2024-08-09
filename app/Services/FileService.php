@@ -5,10 +5,13 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use App\Models\TaskFile;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Request;
+
 
 
 class FileService
 {
+    // protected ?UploadedFile $file = null;
 
     public function saveFileToTaskFile($file, $directory, $task_id)
     {
@@ -16,8 +19,6 @@ class FileService
     
         $allowedMimeTypes = config('filesystems.allowed_file_type');
         $allowedMaxSize = config('filesystems.allowed_max_size', 2048);  // 以 KB 為單位
-
-        Log::debug('saveFileToTaskFile', ['allowedMimeTypes' => $allowedMimeTypes, 'allowedMaxSize' => $allowedMaxSize]);
 
     
         if ($file instanceof UploadedFile) {
@@ -33,9 +34,9 @@ class FileService
                     'error' => "File too large. Maximum size is {$allowedMaxSize} KB."
                 ];
             }
-    
+            $file_name=$file->getClientOriginalName();
             $path = $file->store($directory, 'public');
-            $file_record = $this->createFileRecord($path, $task_id);
+            $file_record = $this->createFileRecord($path, $task_id,$file_name);
     
             if (isset($file_record['error'])) {
                 return $file_record;
@@ -49,13 +50,13 @@ class FileService
         ];
     }
     
-    protected function createFileRecord($path, $task_id)
+    protected function createFileRecord($path, $task_id,$file_name)
     {
-        // 儲存檔案到指定路徑並返回儲存的路徑或文件名
         try {
             return TaskFile::create([
                 'task_id' => $task_id,
-                'file_path' => $path
+                'file_path' => $path,
+                'file_name'=>$file_name
             ]);
         } catch (\Exception $e) {
             return [

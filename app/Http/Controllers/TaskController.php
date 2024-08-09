@@ -17,6 +17,7 @@ class TaskController extends Controller
 {
     protected $fileService;
 
+
     public function __construct(
         FileService $fileService
     )
@@ -26,7 +27,7 @@ class TaskController extends Controller
 
     public function index()
     {
-        $tasks = Task::with('creator', 'assignee')->paginate(10);
+        $tasks = Task::with('creator', 'assignee')->where('valid','!=',Task::STATUS_INVALID)->paginate(10);
         return view('tasks.index', compact('tasks'));
     }
 
@@ -50,8 +51,10 @@ class TaskController extends Controller
             'created_by' => Auth::id(),
         ]);
 
+
         if($request->hasFile('file')){
-            $file_path = $this->fileService->saveFileToTaskFile($request->file('file'), 'taskfile/'.$task->id,$task->id);
+            $fileService = new FileService($request, 'file');
+            $file_path = $fileService->saveFileToTaskFile($request->file('file'), 'taskfile/'.$task->id,$task->id);
             $task->files()->saveMany($file_path);
             if (is_array($file_path) && isset($file_path['error'])) {
                 return back()->withErrors($file_path['error']);
@@ -72,6 +75,7 @@ class TaskController extends Controller
     {
         $this->authorize('update', $task);
         $user=User::all();
+
         return view('tasks.edit', compact('task','user'));
     }
 
@@ -113,9 +117,25 @@ class TaskController extends Controller
     {
         $this->authorize('delete', $task);
         $task->delete();
-
         return redirect()->route('tasks.index')->with('success', '工作單已刪除');
     }
+
+    public function task_cancel(Request $request, Task $task)
+    {
+        $this->authorize('update', $task);
+        try{
+            $task->where('id',$request->id)->update([
+                'valid'=>Task::STATUS_INVALID,
+                'updated_by'=>Auth::id()
+            ]);
+        }catch(\Exception $e){
+            Log::debug(['task_cancel'=>$e]);
+            return response()->json(['message' => $e], 500);
+        }
+        return response()->json(['message' => 'task cancel successfully'], 200);
+    }
+
+
 
     public function create_task_note(Request $request, Task $task){
         $request->validate([

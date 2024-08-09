@@ -37,7 +37,7 @@
 
         <div class="mb-4">
             <h4>上傳文件</h4>
-            <form action="{{ route('task_files.store', $task->id) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('upload_file', $task->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="mb-3">
                     <label for="file" class="form-label">選擇文件</label>

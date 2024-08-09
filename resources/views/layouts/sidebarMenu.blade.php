@@ -25,6 +25,12 @@
                     Customers
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('activity_log.index') }}">
+                    <span data-feather="shopping-cart"></span>
+                    Activity Log
+                </a>
+            </li>
         </ul>
     </div>
 </nav>

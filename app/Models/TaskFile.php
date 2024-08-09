@@ -12,6 +12,7 @@ class TaskFile extends BaseModel
     protected $fillable = [
         'task_id',
         'file_path',
+        'file_name'
     ];
 
     public function task()

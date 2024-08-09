@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\TaskFileController;
+use App\Http\Controllers\ActivityLogController;
+use App\Http\Controllers\FilesController;
 
 
 /*
@@ -46,5 +48,17 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 Route::middleware(['auth'])->group(function () {
     Route::resource('tasks', TaskController::class);
-    Route::post('tasks/{task}/files', [TaskFileController::class, 'store'])->name('task_files.store');
+    Route::post('task_cancel', [TaskController::class,'task_cancel'])->name('task_cancel');
+
+    Route::post('download_file/{file_path}', [FilesController::class, 'download_file'])->where('file_path', '.*') ->name('download_file');
+    Route::delete('delete_file/{file_path}', [FilesController::class, 'delete_file'])->where('file_path', '.*') ->name('delete_file');
+    Route::post('upload_file/{file_path}', [FilesController::class, 'upload_file'])->where('file_path', '.*') ->name('upload_file');
+
+
+
+    Route::get('activity_log', [ActivityLogController::class,'index'])->name('activity_log.index');
+
+
+
+
 });

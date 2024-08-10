@@ -12,6 +12,7 @@ use App\Http\Controllers\TaskFileController;
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\FilesController;
 use App\Http\Controllers\TaskFlowController;
+use App\Http\Controllers\UserRoleController;
 
 
 /*
@@ -60,6 +61,11 @@ Route::middleware(['auth'])->group(function () {
 
     //work flow
     Route::resource('task_flow',TaskFlowController::class);
+
+    //user role
+    Route::resource('user_role',UserRoleController::class);
+
+    
 
 
 

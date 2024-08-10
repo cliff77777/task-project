@@ -17,11 +17,6 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">
-                    Customers
-                </a>
-            </li>
-            <li class="nav-item">
                 <a class="nav-link" href="{{ route('activity_log.index') }}">
                     Activity Log
                 </a>
@@ -29,6 +24,11 @@
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('task_flow.index') }}">
                     Task Flow
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('user_role.index') }}">
+                    User Role
                 </a>
             </li>
         </ul>

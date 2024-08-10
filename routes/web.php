@@ -11,6 +11,7 @@ use App\Http\Controllers\TaskController;
 use App\Http\Controllers\TaskFileController;
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\FilesController;
+use App\Http\Controllers\TaskFlowController;
 
 
 /*
@@ -30,34 +31,35 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::get('/',[HomeController::class, 'index'])->name('home.index');
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 
+//login logout 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login.index');//AuthenticatesUsers.showLoginForm
 Route::post('/login', [LoginController::class, 'login'])->name('login'); //AuthenticatesUsers.login
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->middleware('auth'); //AuthenticatesUsers.logout
 
-
+//user register
 Route::get('/register', [RegisterController::class, 'index'])->name('register.index');
 Route::post('/register', [RegisterController::class, 'register'])->name('register');
 
-// Route::get('/check-email/{email}', [RegisterController::class, 'checkEmail'])->name('checkEmail');
-
+//emial
 Route::post('/email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
 
-
-Route::get('/home', [HomeController::class, 'index'])->name('home');
-
 Route::middleware(['auth'])->group(function () {
+    //task controller
     Route::resource('tasks', TaskController::class);
     Route::post('task_cancel', [TaskController::class,'task_cancel'])->name('task_cancel');
 
+    //file controller
     Route::post('download_file/{file_path}', [FilesController::class, 'download_file'])->where('file_path', '.*') ->name('download_file');
     Route::delete('delete_file/{file_path}', [FilesController::class, 'delete_file'])->where('file_path', '.*') ->name('delete_file');
     Route::post('upload_file/{file_path}', [FilesController::class, 'upload_file'])->where('file_path', '.*') ->name('upload_file');
 
-
-
+    //activity controller
     Route::get('activity_log', [ActivityLogController::class,'index'])->name('activity_log.index');
 
+    //work flow
+    Route::resource('task_flow',TaskFlowController::class);
 
 
 

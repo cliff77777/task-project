@@ -4,7 +4,10 @@ namespace App\Providers;
 
 // use Illuminate\Support\Facades\Gate;
 use App\Models\Task;
+use App\Models\UserRole;
 use App\Policies\TaskPolicy;
+use App\Policies\UserRolePolicy;
+
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Laravel\Passport\Passport;
 
@@ -19,6 +22,8 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         Task::class => TaskPolicy::class,
+        UserRole::class => UserRolePolicy::class,
+
     ];
 
     /**

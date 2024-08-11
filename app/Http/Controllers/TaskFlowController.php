@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\TaskFlow;
+use App\Models\TaskFlowTemplate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+
 
 
 class TaskFlowController extends Controller
@@ -38,7 +39,7 @@ class TaskFlowController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(TaskFlow $taskFlow)
+    public function show(TaskFlowTemplate $taskFlowTemplate)
     {
         //
         return view('task_flow.show');
@@ -48,7 +49,7 @@ class TaskFlowController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(TaskFlow $taskFlow)
+    public function edit(TaskFlowTemplate $taskFlowTemplate)
     {
         //
         return view('task_flow.edit');
@@ -57,7 +58,7 @@ class TaskFlowController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, TaskFlow $taskFlow)
+    public function update(Request $request, TaskFlowTemplate $taskFlowTemplate)
     {
         //
     }
@@ -65,7 +66,7 @@ class TaskFlowController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(TaskFlow $taskFlow)
+    public function destroy(TaskFlowTemplate $taskFlowTemplate)
     {
         //
     }

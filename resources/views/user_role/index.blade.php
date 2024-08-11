@@ -17,64 +17,53 @@
             @endif
         </div>
 
-        <h1 class="my-4">流程列表</h1>
+        <h1 class="my-4">權限列表</h1>
         <div class="mb-4">
-            <a href="{{ route('task_flow.create') }}" class="btn btn-primary">新增任務流程</a>
+            <a href="{{ route('user_role.create') }}" class="btn btn-primary">新增權限</a>
         </div>
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>流程名稱</th>
+                    <th>權限名稱</th>
                     <th>創建人</th>
-                    <th>流程步驟</th>
+                    <th>權限控制</th>
                     <th>操作</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    {{-- <td>
-                            <a href="{{ route('tasks.show', $task->id) }}" class="btn btn-sm btn-info">任務處理</a>
-                            @can('update', $task)
-                                <a href="{{ route('tasks.edit', $task->id) }}" class="btn btn-sm btn-warning">編輯</a>
-                                <a onclick="confirmCancel(event, '{{ route('task_cancel') }}', {{ $task->id }})"
+                @foreach ($user_role as $role)
+                    <tr>
+                        <td>{{ $role->role_name }}</td>
+                        <td>{{ $role->username->name }}</td>
+                        <td>{{ json_encode($role->role_control) }}</td>
+                        <td>
+                            <a href="{{ route('user_role.show', $role->id) }}" class="btn btn-sm btn-info">詳情</a>
+                            {{-- @can('update', $task) --}}
+                            <a href="{{ route('user_role.edit', $role->id) }}" class="btn btn-sm btn-warning">權限編輯</a>
+                            {{-- <a onclick="confirmCancel(event, '{{ route('task_cancel') }}', {{ $task->id }})"
                                     class="btn-sm btn-danger">取消任務
-                                </a>
-                            @endcan
-                        </td> --}}
-                </tr>
+                                </a> --}}
+                            {{-- @endcan --}}
+                        </td>
+                    </tr>
+                @endforeach
             </tbody>
         </table>
-        {{-- {{ $tasks->links() }} --}}
+        <div>
+            @if ($user_role->onFirstPage())
+                <!-- 如果在第一頁，不顯示上一頁按鈕 -->
+            @else
+                <a href="{{ $user_role->previousPageUrl() }}" class="btn btn-primary">上一頁</a>
+            @endif
+
+            @if ($user_role->hasMorePages())
+                <a href="{{ $user_role->nextPageUrl() }}" class="btn btn-primary">下一頁</a>
+            @endif
+        </div>
     @endsection
 
     @push('scripts')
         <script>
-            function confirmCancel(event, url, task_id) {
-                event.preventDefault();
-                var confirmAction = confirm("Are you sure you want to cancel this task?");
-                if (confirmAction) {
-                    console.log(task_id);
-                    $.ajax({
-                        url: url,
-                        type: 'POST',
-                        data: {
-                            _token: '{{ csrf_token() }}',
-                            'id': task_id
-                        },
-                        success: function(response) {
-                            alert(response.message);
-                            location.reload()
-                        },
-                        error: function(xhr) {
-                            alert('An error occurred while cancel the task.');
-                        }
-                    });
-                }
-            }
             $(document).ready(function() {
                 // 自動隱藏成功提示
                 var successAlert = $('#successAlert');

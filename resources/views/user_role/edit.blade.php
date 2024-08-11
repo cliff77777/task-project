@@ -1,74 +1,59 @@
 @extends('layouts.app')
 
 @section('content')
-    @can('edit', $task)
-        <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-5">
-            <h1>Edit Task</h1>
-            <form action="{{ route('tasks.update', $task->id) }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                @method('PUT')
-
-                <div class="form-group mb-3">
-                    <label for="subject">Subject:</label>
-                    <input type="text" class="form-control" id="subject" name="subject"
-                        value="{{ old('subject', $task->subject) }}" required>
+    <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <h1 class="my-4">編輯權限</h1>
+        <form action="{{ route('user_role.update', $role->id) }}" method="POST">
+            @csrf
+            @method('PUT')
+            <div class="row">
+                <div class="mb-3 col-md-2">
+                    <label for="role_name" class="form-label">權限名稱</label>
+                    <input type="text" class="form-control" id="role_name" name="role_name" required
+                        value="{{ $role->role_name }}">
                 </div>
-
-                <div class="form-group mb-3">
-                    <label for="description">Description:</label>
-                    <textarea class="form-control" id="description" name="description" required>{{ old('description', $task->description) }}</textarea>
-                </div>
-
-                <div class="form-group mb-3">
-                    <label for="estimated_hours">Estimated Hours:</label>
-                    <input type="number" class="form-control" id="estimated_hours" name="estimated_hours"
-                        value="{{ old('estimated_hours', $task->estimated_hours) }}" required>
-                </div>
-
-                <div class="form-group mb-3">
-                    <label for="assigned_to">Assign to:</label>
-                    <select class="form-control" id="assigned_to" name="assigned_to" default=''>
-                        @if (empty($task->assigned_to))
-                            <option value="">---please select---</option>
-                        @endif
-                        @foreach ($user as $profile)
-                            <option value="{{ $profile->id }}" {{ old('assigned_to') == $profile->id ? 'selected' : '' }}>
-                                {{ $profile->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-
-                @if (!empty($task->files))
-                    <h4>已上傳檔案</h4>
-                    @foreach ($task->files as $file)
-                        <div class="mb-3">
-                            <a
-                                href="{{ Storage::url($file->file_path) }}">{{ $file->file_name ? $file->file_name : 'unknow' }}</a>
-                            {{ formatSizeUnits(Storage::size('public/' . $file->file_path)) }}
-
-                            <a href="{{ route('download_file', ['file_path' => $file->file_path]) }}" method='POST'
-                                class="btn-sm btn-info text-white me-1">Download
-                            </a>
-                            <a href="#"
-                                onclick="confirmDelete(event, '{{ route('delete_file', ['file_path' => $file->file_path]) }}')"
-                                class="btn-sm btn-danger">Delete
-                            </a>
-
+            </div>
+            <div class="mb-3">
+                <div id="formContainer">
+                    <div class="row align-items-center mb-3">
+                        <div class="col-md-2">
+                            <label for="role_descript" class="form-label">權限說明</label>
+                            <input type="text" name="role_descript" class='form-control' required
+                                value="{{ $role->role_descript }}">
                         </div>
-                    @endforeach
-                @endif
-                <h4>檔案上傳</h4>
-                <div class="mb-3">
-                    <label for="file" class="form-label">選擇文件</label>
-                    <input type="file" class="form-control" id="file" name="file">
+                    </div>
                 </div>
-                <button type="submit" class="btn btn-primary">Update Task</button>
-            </form>
-        </div>
-    @endcan
+            </div>
+            <div class="mb-3">
+                <div id="formContainer">
+                    <div class="align-items-center mb-3">
+                        <div class="col-md-2">
+                            <label for="role_control" class="form-label">權限控制</label>
+                        </div>
+                        <label for="role_control[all]" class="form-label">全部控制</label>
+                        <input type="checkbox" name="role_control[all]" class='form-checkbox' id="role_control[all]">
+
+                        <label for="role_control[not_all]" class="form-label">部分控制</label>
+                        <input type="checkbox" name="role_control[not_all]" class='form-checkbox'
+                            id="role_control[not_all]">
+
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary mb-3">更新權限</button>
+        </form>
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+    </div>
 @endsection
-@push('scripts')
+{{-- @push('scripts')
     <script>
         function confirmDelete(event, url) {
             event.preventDefault();
@@ -92,4 +77,4 @@
             }
         }
     </script>
-@endpush
+@endpush --}}

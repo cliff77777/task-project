@@ -11,8 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('task_flows', function (Blueprint $table) {
+        Schema::create('task_flow_template', function (Blueprint $table) {
             $table->id();
+            $table->string('task_flow_name');
+            $table->foreignId('created_by')->constrained('users');
+            $table->foreignId('updated_by')->constrained('users');
             $table->timestamps();
         });
     }
@@ -22,6 +25,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('task_flows');
+        Schema::disableForeignKeyConstraints();
+        Schema::dropIfExists('task_flow_template');
+        Schema::enableForeignKeyConstraints();
     }
 };

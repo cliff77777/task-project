@@ -7,20 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 
 
-class UserRole extends Model
+class TaskFlowTemplate extends Model
 {
     use HasFactory,Notifiable;
 
-    /**
+        /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
 
-    protected $fillable = [
-        'role_name',
-        'role_control',
-        'role_descript',
+     protected $fillable = [
+        'task_flow_name',
         'created_by',
         'updated_by'
     ];
@@ -39,11 +37,5 @@ class UserRole extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'role_control'=>'array'
     ];
-
-    public function username(){
-        return $this->belongsTo(User::class, 'created_by');
-
-    }
 }

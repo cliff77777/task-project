@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
+
 
 class Task extends BaseModel
 {
-    use HasFactory;
+    use HasFactory,Notifiable;
 
     public const STATUS_INVALID = 0;
     public const STATUS_VALID = 1;

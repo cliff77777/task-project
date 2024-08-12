@@ -31,7 +31,7 @@ class TaskPolicy
     public function create(User $user): bool
     {
         // 只有具有 'admin' 或 'manager' 角色的用戶可以創建任務
-        return $user->role === 'admin' || $user->role === 'manager';
+        return $user->role == '1' || $user->role == '1';
     }
 
     /**
@@ -40,7 +40,7 @@ class TaskPolicy
     public function update(User $user, Task $task): bool
     {
         // 只有任務的創建者或 'admin' 角色的用戶可以更新任務
-        return $user->id === $task->created_by || $user->role === 'admin';
+        return $user->id == $task->created_by || $user->role == '1';
     }
 
     /**
@@ -49,13 +49,13 @@ class TaskPolicy
     public function delete(User $user, Task $task): bool
     {
         // 只有 'admin' 角色的用戶可以刪除任務
-        return $user->role === 'admin';
+        return $user->role == '1';
     }
 
     public function edit(User $user): bool
     {
         // 只有具有 'admin' 或 'manager' 角色的用戶可以創建任務
-        return $user->role === 'admin' || $user->role === 'manager';
+        return $user->role == '1' || $user->role == '1';
     }
 
     /**

@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 // use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\Hash;
+
 
 use Laravel\Passport\HasApiTokens;
 
@@ -23,7 +25,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
-        'role'
+        'role',
+        'updated_by'
     ];
 
     /**
@@ -54,5 +57,30 @@ class User extends Authenticatable implements MustVerifyEmail
     public function tasksAssigned()
     {
         return $this->hasMany(Task::class, 'assigned_to');
+    }
+
+    public function checkPassword($password)
+    {
+        return Hash::check($password, $this->password);
+    }
+
+    public function updatedBy()
+    {
+        return $this->belongsTo(User::class, 'updated_by');
+    }
+    //get role id because 
+    public function role()
+    {
+        return $this->belongsTo(UserRole::class, 'role');
+    }
+    //get role id
+    public function roleRelation()
+    {
+        return $this->belongsTo(UserRole::class, 'role');
+    }
+
+    public function getRoleNameAttribute()
+    {
+        return $this->roleRelation ? $this->roleRelation->role_name : null;
     }
 }

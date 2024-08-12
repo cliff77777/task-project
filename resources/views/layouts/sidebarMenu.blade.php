@@ -27,6 +27,11 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a class="nav-link" href="{{ route('user_manage.index') }}">
+                    User Manage
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" href="{{ route('user_role.index') }}">
                     User Role
                 </a>

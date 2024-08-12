@@ -16,8 +16,6 @@ class Controller extends BaseController
 
     public function CheckMailVerifyForView($request)
     {
-        Log::debug('CheckMailVerifyForView');
-
         if (!$request->user()->hasVerifiedEmail()) {
             setSessionMessageFromStatusCode('error','email_not_verified');
         }else{

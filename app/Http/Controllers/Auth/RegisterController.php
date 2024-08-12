@@ -7,6 +7,11 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+
+
+
 
 class RegisterController extends Controller
 {
@@ -54,7 +59,7 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', 'unique:users'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
@@ -68,14 +73,14 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        $user = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
+
+        $user = new User;
+        $user->name=$data['name'];
+        $user->email=$data['email'];
+        $user->password=$data['password'];
 
         // 創建訪問令牌
-        $token = $user->createToken('YourAppName')->accessToken;
+        $user->createToken('YourAppName')->accessToken;
 
         return $user;
     }

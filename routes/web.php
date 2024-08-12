@@ -13,6 +13,7 @@ use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\FilesController;
 use App\Http\Controllers\TaskFlowController;
 use App\Http\Controllers\UserRoleController;
+use App\Http\Controllers\UserManageController;
 
 
 /*
@@ -47,6 +48,12 @@ Route::post('/register', [RegisterController::class, 'register'])->name('registe
 Route::post('/email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
 
 Route::middleware(['auth'])->group(function () {
+    //user controller
+    Route::resource('user_manage', UserManageController::class);
+    Route::post('password_check',[ UserManageController::class,'password_check'])->name('password_check');
+
+
+
     //task controller
     Route::resource('tasks', TaskController::class);
     Route::post('task_cancel', [TaskController::class,'task_cancel'])->name('task_cancel');

@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+    {{-- {{ dd($assign_user) }} --}}
     @can('edit', $task)
         <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-5">
             <h1>Edit Task</h1>
@@ -26,17 +27,45 @@
                 </div>
 
                 <div class="form-group mb-3">
-                    <label for="assigned_to">Assign to:</label>
-                    <select class="form-control" id="assigned_to" name="assigned_to" default=''>
-                        @if (empty($task->assigned_to))
+                    <label for="task_flow_template_id">任務流程</label>
+                    @if (empty($task->task_flow_template))
+                        <select class="form-control" id="task_flow_template_id" name="task_flow_template_id">
                             <option value="">---please select---</option>
-                        @endif
-                        @foreach ($user as $profile)
-                            <option value="{{ $profile->id }}" {{ old('assigned_to') == $profile->id ? 'selected' : '' }}>
-                                {{ $profile->name }}
-                            </option>
-                        @endforeach
+                            @foreach ($task_flow_template as $template)
+                                <option value="{{ $template->id }}">
+
+                                </option>
+                            @endforeach
+                        @else
+                            <input type="text" class="form-control" readonly
+                                value="{{ $task->task_flow_template->task_flow_name }}">
+                            <input type="text" class="form-control" readonly hidden
+                                value="{{ $task->task_flow_template->id }}" id="task_flow_template_id"
+                                name="task_flow_template_id">
+                    @endif
+
                     </select>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="assigned_to">分配給:</label>
+                    @if (!empty($template->assigned_to))
+                        <select class="form-control" id="assigned_to" name="assigned_to">
+                            <option value="">---請先選擇任務流程---</option>
+                            @foreach ($assign_user as $id => $name)
+                                <option value="{{ $id }}" {{ $task->task_flow_template_id == $id ? 'selected' : '' }}>
+                                    {{ $name }}</option>
+                            @endforeach
+                        </select>
+                    @else
+                        <select class="form-control" id="assigned_to" name="assigned_to">
+                            <option value="">---請選擇---</option>
+                            @foreach ($assign_user as $user)
+                                <option value="{{ $user['id'] }}">{{ $user['name'] }}</option>
+                            @endforeach
+                        </select>
+                    @endif
+
                 </div>
 
                 @if (!empty($task->files))
@@ -54,7 +83,6 @@
                                 onclick="confirmDelete(event, '{{ route('delete_file', ['file_path' => $file->file_path]) }}')"
                                 class="btn-sm btn-danger">Delete
                             </a>
-
                         </div>
                     @endforeach
                 @endif
@@ -91,5 +119,48 @@
                 });
             }
         }
+
+
+        $('#task_flow_template_id').on('change', function() {
+            var task_flow_template = $('#task_flow_template_id').val();
+            var assigned_to = $('#assigned_to');
+            assigned_to.empty();
+            if (task_flow_template) {
+                $.ajax({
+                    url: '{{ route('get_task_assign') }}',
+                    type: 'GET',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        'task_flow_template_id': task_flow_template,
+                    },
+                    success: function(response) {
+                        // console.log(count(response));
+                        assigned_to.prop('disabled', false); // 取消禁用select
+                        if (response === null || response === undefined) {
+                            assigned_to.empty();
+                            assigned_to.append('<option value="">---沒有找到符合的用戶---</option>');
+                            assigned_to.prop('disabled', true); // 禁用select
+                        } else {
+                            assigned_to.empty();
+                            assigned_to.append('<option value="">---請選擇---</option>');
+                            $.each(response.success, function(key, value) {
+                                assigned_to.append('<option value="' + value.id + '">' + value
+                                    .name +
+                                    '</option>');
+                            });
+                        }
+                    },
+                    error: function(xhr) {
+                        console.log('發生錯誤:', xhr);
+                        // 處理錯誤情況
+                        assign_error_msg.text('發生錯誤，請稍後再試。').attr('hidden', false);
+                        assigned_to.prop('disabled', true); // 禁用select
+                    }
+                });
+            } else {
+                assigned_to.append('<option value="" >---請先選擇任務流程---</option>');
+                assigned_to.prop('disabled', true);
+            }
+        });
     </script>
 @endpush

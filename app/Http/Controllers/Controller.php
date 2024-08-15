@@ -47,6 +47,7 @@ class Controller extends BaseController
             return $result;
         } catch (Exception $e) {
             DB::rollBack();
+            Log::debug(["executeInTransaction"=>$e]);
             throw $e;
         }
     }

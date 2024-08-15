@@ -31,46 +31,48 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    {{-- <td>
-                            <a href="{{ route('tasks.show', $task->id) }}" class="btn btn-sm btn-info">任務處理</a>
-                            @can('update', $task)
-                                <a href="{{ route('tasks.edit', $task->id) }}" class="btn btn-sm btn-warning">編輯</a>
-                                <a onclick="confirmCancel(event, '{{ route('task_cancel') }}', {{ $task->id }})"
-                                    class="btn-sm btn-danger">取消任務
-                                </a>
-                            @endcan
-                        </td> --}}
-                </tr>
+                {{-- {{ dd($task_flow_template) }} --}}
+                @foreach ($task_flow_template as $template)
+                    <tr>
+                        <td>{{ $template->task_flow_name }}</td>
+                        <td>{{ $template->creator->name }}</td>
+                        <td>{{ $template->steps_count }}</td>
+                        <td>
+                            <a href="{{ route('task_flow.show', $template->id) }}" class="btn btn-sm btn-info">詳細內容</a>
+                            {{-- @can('update', $task) --}}
+                            {{-- <a href="{{ route('task_flow.edit', $template->id) }}" class="btn btn-sm btn-warning">編輯</a> --}}
+                            <a onclick="confirmCancel(event, '{{ route('task_flow.destroy', $template->id) }}', {{ $template->id }})"
+                                class="btn btn-sm btn-danger">刪除流程
+                            </a>
+                            {{-- @endcan --}}
+                        </td>
+                    </tr>
+                @endforeach
             </tbody>
         </table>
-        {{-- {{ $tasks->links() }} --}}
+        {{ $task_flow_template->links() }}
     @endsection
 
     @push('scripts')
         <script>
-            function confirmCancel(event, url, task_id) {
+            function confirmCancel(event, url, template_id) {
                 event.preventDefault();
-                var confirmAction = confirm("Are you sure you want to cancel this task?");
+                var confirmAction = confirm("Are you sure you want to delete this task flow?");
                 if (confirmAction) {
-                    console.log(task_id);
+                    console.log(template_id);
                     $.ajax({
                         url: url,
-                        type: 'POST',
+                        type: 'DELETE',
                         data: {
                             _token: '{{ csrf_token() }}',
-                            'id': task_id
+                            'id': template_id
                         },
                         success: function(response) {
                             alert(response.message);
                             location.reload()
                         },
                         error: function(xhr) {
-                            alert('An error occurred while cancel the task.');
+                            alert(xhr.message);
                         }
                     });
                 }

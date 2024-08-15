@@ -25,6 +25,7 @@ class Task extends BaseModel
         'created_by',
         'assigned_to',
         'updated_by',
+        'task_flow_template_id',
         'valid'
     ];
 
@@ -41,6 +42,11 @@ class Task extends BaseModel
     public function assignee()
     {
         return $this->belongsTo(User::class, 'assigned_to');
+    }
+
+    public function task_flow_template(){
+        return $this->belongsTo(TaskFlowTemplate::class, 'task_flow_template_id');
+
     }
 
     public function notes()

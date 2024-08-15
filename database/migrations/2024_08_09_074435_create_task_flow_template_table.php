@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('task_flow_template', function (Blueprint $table) {
+        Schema::create('task_flow_templates', function (Blueprint $table) {
             $table->id();
             $table->string('task_flow_name');
             $table->foreignId('created_by')->constrained('users');
@@ -26,7 +26,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::disableForeignKeyConstraints();
-        Schema::dropIfExists('task_flow_template');
+        Schema::dropIfExists('task_flow_templates');
         Schema::enableForeignKeyConstraints();
     }
 };

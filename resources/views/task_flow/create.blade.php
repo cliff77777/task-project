@@ -25,23 +25,24 @@
                             <div class="row">
                                 <div class="form-check col-md-6">
                                     <input class="form-check-input" type="radio" name="step[1][sendEmailNotification]"
-                                        id="sendEmailNotificationOn" value="on" checked>
+                                        id="sendEmailNotificationOn" value="1" checked>
                                     <label class="form-check-label" for="sendEmailNotificationOn">On</label>
                                 </div>
                                 <div class="form-check col-md-6">
                                     <input class="form-check-input" type="radio" name="step[1][sendEmailNotification]"
-                                        id="sendEmailNotificationOff" value="off">
+                                        id="sendEmailNotificationOff" value="0">
                                     <label class="form-check-label" for="sendEmailNotificationOff">Off</label>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-2">
-                            <label for="[1][executionPermission]" class="form-label">執行權限</label>
-                            <select class="form-select" id="[1][executionPermission]" name="step[1][executionPermission]"
-                                required>
-                                <option value="read">Read</option>
-                                <option value="write">Write</option>
-                                <option value="execute">Execute</option>
+                            <label for="[1][to_role]" class="form-label">執行權限</label>
+                            <select class="form-select" id="[1][to_role]" name="step[1][to_role]" required>
+                                @foreach ($user_role as $role)
+                                    {
+                                    <option value="{{ $role->id }}">{{ $role->role_name }}</option>
+                                    }
+                                @endforeach
                             </select>
                         </div>
                         <div class="col-md-2">
@@ -79,7 +80,7 @@
                 let newRow = document.createElement('div');
                 newRow.innerHTML =
                     `
-                    <div class="row align-items-center mb-3">
+                    <div class="row align-items-center mb-3" id='newRow${currentStep}'>
                         <div class="col-md-1">
                             step.${currentStep}
                             <input type="hidden" class="step" value="${currentStep}" name="step[${currentStep}]">
@@ -89,32 +90,44 @@
                             <div class="row">
                                 <div class="form-check col-md-6">
                                     <input class="form-check-input" type="radio" name="step[${currentStep}][sendEmailNotification]"
-                                        id="sendEmailNotificationOn" value="on" checked>
+                                        id="sendEmailNotificationOn" value="1" checked>
                                     <label class="form-check-label" for="sendEmailNotificationOn">On</label>
                                 </div>
                                 <div class="form-check col-md-6">
                                     <input class="form-check-input" type="radio" name="step[${currentStep}][sendEmailNotification]"
-                                        id="sendEmailNotificationOff" value="off">
+                                        id="sendEmailNotificationOff" value="0">
                                     <label class="form-check-label" for="sendEmailNotificationOff">Off</label>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-2">
-                            <label for="[${currentStep}][executionPermission]" class="form-label">執行權限</label>
-                            <select class="form-select" id="[${currentStep}][executionPermission]" name="step[${currentStep}][executionPermission]" required>
-                                <option value="read">Read</option>
-                                <option value="write">Write</option>
-                                <option value="execute">Execute</option>
+                            <label for="[${currentStep}][to_role]" class="form-label">執行權限</label>
+                            <select class="form-select" id="[${currentStep}][to_role]" name="step[${currentStep}][to_role]" required>
+                                @foreach ($user_role as $role)
+                                    {
+                                    <option value="{{ $role->id }}">{{ $role->role_name }}</option>
+                                    }
+                                @endforeach
                             </select>
                         </div>
                         <div class="col-md-2">
                             <label for="[${currentStep}][descript]" class="form-label">職責說明</label>
                             <input type="text" name="step[${currentStep}][descript]" class='form-control' required>
                         </div>
+                        <div class="col-md-2 ">
+                            <a id="delRow${currentStep}" class="btn  btn-sm btn-danger">X</a>
+                        </div>
                     </div>
                 `;
                 formContainer.appendChild(newRow);
+                // 直接為新添加的刪除按鈕綁定點擊事件
+                document.getElementById(`delRow${currentStep}`).addEventListener('click', function() {
+                    formContainer.removeChild(newRow);
+                });
             });
+
+
+
         });
     </script>
 @endpush

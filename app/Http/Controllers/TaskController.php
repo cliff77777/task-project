@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Task;
 use App\Models\TaskNote;
+use App\Models\TaskFlowTemplate;
+
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -33,7 +35,9 @@ class TaskController extends Controller
 
     public function create()
     {
-        return view('tasks.create');
+
+        $task_flow_template=TaskFlowTemplate::get();
+        return view('tasks.create',compact('task_flow_template'));
     }
 
     public function store(Request $request)
@@ -42,12 +46,14 @@ class TaskController extends Controller
             'subject' => 'required|string|max:255',
             'description' => 'required|string',
             'estimated_hours' => 'required|numeric',
+            'task_flow_template_id'=> 'required'
         ]);
 
         $task=Task::create([
             'subject' => $request->subject,
             'description' => $request->description,
             'estimated_hours' => $request->estimated_hours,
+            'task_flow_template_id'=> $request->task_flow_template_id,
             'created_by' => Auth::id(),
         ]);
 
@@ -71,25 +77,31 @@ class TaskController extends Controller
 
 
     //get edit page
-    public function edit(Task $task)
-    {
+    public function edit($id)
+    {    
+        $task=Task::with('task_flow_template')->find($id);
         $this->authorize('update', $task);
-        $user=User::all();
 
-        return view('tasks.edit', compact('task','user'));
+        $task_flow_template=TaskFlowTemplate::get();
+        $assign_user = '';
+        $task_flow_template_user = TaskFlowTemplate::with('first_order')->find($task->task_flow_template->id);
+        if ($task_flow_template_user) {
+            $assign_user = $task_flow_template_user->getAssignedUsers()['response'];
+        } 
+
+        return view('tasks.edit', compact('task','task_flow_template','assign_user'));
     }
 
     //post task update 
     public function update(Request $request, Task $task)
     {
-        Log::debug('in update');
-
         $this->authorize('update', $task);
 
         $request->validate([
             'subject' => 'required|string|max:255',
             'description' => 'required|string',
             'estimated_hours' => 'required|numeric',
+            'task_flow_template_id' => 'required|integer',
             'file' => 'file|mimetypes:image/jpeg,image/png,image/gif,image/bmp,image/tiff,image/webp,image/svg+xml,application/pdf,application/x-www-form-urlencoded,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/msword,multipart/form-data,text/plain|max:2048',
         ]);
 
@@ -97,14 +109,11 @@ class TaskController extends Controller
             'subject' => $request->subject,
             'description' => $request->description,
             'estimated_hours' => $request->estimated_hours,
+            'task_flow_template_id'=>$request->task_flow_template_id,
             'assigned_to' => $request->assigned_to,
         ]);
 
         $file = $request->file('file');
-
-        // return response()->json([
-        //     'file_path' => Storage::url($path),
-        // ]);
 
 
         $check_file=$this->check_file($file,$task,$request->hasFile('file'));
@@ -167,6 +176,17 @@ class TaskController extends Controller
         }
     
         return null;
+    }
+
+    public function get_task_assign(Request $request)
+    {
+        $task_flow_template = TaskFlowTemplate::with('first_order')->find($request->task_flow_template_id);
+        if ($task_flow_template) {
+            $result = $task_flow_template->getAssignedUsers();
+            return response()->json([$result['type'] => $result['response']]);
+        } else {
+            return response()->json(['error' => 'Task flow template not found.'], 404);
+        }
     }
 
 }

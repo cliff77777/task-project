@@ -53,7 +53,7 @@
                             @can('update', $task)
                                 <a href="{{ route('tasks.edit', $task->id) }}" class="btn btn-sm btn-warning">編輯</a>
                                 <a onclick="confirmCancel(event, '{{ route('task_cancel') }}', {{ $task->id }})"
-                                    class="btn-sm btn-danger">取消任務
+                                    class="btn btn-sm btn-danger">取消任務
                                 </a>
                             @endcan
                         </td>

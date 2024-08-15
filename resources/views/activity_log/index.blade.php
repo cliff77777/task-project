@@ -33,5 +33,16 @@
                 @endforeach
             </tbody>
         </table>
+        <div>
+            @if ($activities->onFirstPage())
+                <!-- 如果在第一頁，不顯示上一頁按鈕 -->
+            @else
+                <a href="{{ $activities->previousPageUrl() }}" class="btn btn-primary">上一頁</a>
+            @endif
+
+            @if ($activities->hasMorePages())
+                <a href="{{ $activities->nextPageUrl() }}" class="btn btn-primary">下一頁</a>
+            @endif
+        </div>
     </div>
 @endsection

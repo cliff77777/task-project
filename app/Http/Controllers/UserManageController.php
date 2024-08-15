@@ -69,7 +69,7 @@ class UserManageController extends Controller
             return redirect()->route('user_manage.index')->with('success','We sent  an activation code. please Check the email and click on the link to verify.');
         }catch(\Exception $e){
             Log::info($e);
-            return redirect()->back()->with("message","create user fail ".$e);
+            return redirect()->back()->with("error","create user fail ".$e);
         }
         
 

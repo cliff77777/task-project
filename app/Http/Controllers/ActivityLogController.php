@@ -13,7 +13,7 @@ class ActivityLogController extends Controller
 {
     public function index()
     {
-        $activities = Activity::with('user')->latest()->get();
+        $activities = Activity::with('user')->latest()->paginate(10);
 
         Log::info(['activities'=>$activities]);
 

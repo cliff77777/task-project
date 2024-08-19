@@ -3,8 +3,11 @@
 namespace App\Policies;
 
 use App\Models\Task;
+use App\Models\TaskNote;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
+use Illuminate\Support\Facades\Log;
+
 
 class TaskPolicy
 {
@@ -20,9 +23,17 @@ class TaskPolicy
      * Determine whether the user can view the model.
      */
     public function view(User $user, Task $task): bool
-    {
+    {        
+        Log::info(["Policies"=>$task]);
+
+        $result=false;
+        $task->where('valid',1)->get();
+        if($task||$user->role=1){
+            $result=true;
+
+        }
         // 任何用戶都可以查看任務
-        return true;
+        return $result;
     }
 
     /**
@@ -40,7 +51,8 @@ class TaskPolicy
     public function update(User $user, Task $task): bool
     {
         // 只有任務的創建者或 'admin' 角色的用戶可以更新任務
-        return $user->id == $task->created_by || $user->role == '1';
+
+        return $user->id == $task->created_by ;
     }
 
     /**

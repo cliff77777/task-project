@@ -46,15 +46,17 @@
 
                     </select>
                 </div>
-
+                {{-- {{ dd($check_task_step_status->status) }} --}}
                 <div class="form-group mb-3">
                     <label for="assigned_to">分配給:</label>
-                    @if (!empty($template->assigned_to))
-                        <select class="form-control" id="assigned_to" name="assigned_to">
+                    @if (!empty($task->assigned_to))
+                        <select class="form-control" id="assigned_to" name="assigned_to"
+                            {{ $check_task_step_status->status !== '0' ? 'success' : 'disabled' }}>
                             <option value="">---請先選擇任務流程---</option>
-                            @foreach ($assign_user as $id => $name)
-                                <option value="{{ $id }}" {{ $task->task_flow_template_id == $id ? 'selected' : '' }}>
-                                    {{ $name }}</option>
+                            @foreach ($assign_user as $key => $user)
+                                <option value="{{ $user['id'] }}"
+                                    {{ $task->task_flow_template_id == $user['id'] ? 'selected' : 'false' }}>
+                                    {{ $user['name'] }}</option>
                             @endforeach
                         </select>
                     @else

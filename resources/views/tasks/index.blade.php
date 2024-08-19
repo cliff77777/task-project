@@ -43,7 +43,7 @@
                         <td>{{ $task->creator->name }}</td>
                         <td>
                             @if (!empty($task->assignee->name))
-                                <a href="{{ route('tasks.edit', $task->id) }}"> {{ $task->assignee->name }}</a>
+                                {{ $task->assignee->name }}
                             @else
                                 <a href="{{ route('tasks.edit', $task->id) }}">未指派</a>
                             @endif

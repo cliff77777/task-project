@@ -86,12 +86,17 @@ class UserManageController extends Controller
             $user = User::find($id);
             $user->name = $request->input('name');
             $user->role = $request->input('role');
-            $user->password = $request->input('password'); 
+            if(!empty($request->input('password'))){
+                $user->password = $request->input('password'); 
+            }
             $user->updated_by = Auth::id();
             $user->save();
-            return redirect()->back()->with('success','user info updte success');
+            Log::debug('update user success');
+
+            return redirect()->route('user_manage.index')->with('success','user info updte success');
 
         }catch(\Exception $e){
+            Log::debug($e);
             return redirect()->back()->with('error','user info updte fail '.$e);
         }
 

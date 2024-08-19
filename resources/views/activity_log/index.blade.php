@@ -24,9 +24,9 @@
                         <td>{{ $activity->description }}</td>
                         <td>{{ $activity->subject_type }}</td>
                         <td>{{ $activity->subject_id }}</td>
-                        <td>{{ $activity->causer_type }}</td>
-                        <td>{{ $activity->causer_id }}</td>
-                        <td>{{ $activity->user->name }}</td>
+                        <td>{{ $activity->causer_type == null ? 'System Default' : $activity->causer_type }}</td>
+                        <td>{{ $activity->causer_id == null ? 'System Default' : $activity->causer_id }}</td>
+                        <td>{{ $activity->user == null ? 'System Default' : $activity->user['name'] }}</td>
                         <td>{{ json_encode($activity->properties) }}</td>
                         <td>{{ $activity->created_at }}</td>
                     </tr>

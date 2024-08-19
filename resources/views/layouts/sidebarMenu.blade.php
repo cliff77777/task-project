@@ -3,37 +3,37 @@
         <ul class="nav flex-column">
             <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="{{ route('home') }}">
-                    Dashboard
+                    {{ __('common.Dashboard') }}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('tasks.index') }}">
-                    Task Menu
+                    {{ __('common.Task Menu') }}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('tasks.create') }}">
-                    Add Task Tickets
+                    {{ __('common.Add Task Tickets') }}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('activity_log.index') }}">
-                    Activity Log
+                    {{ __('common.Activity Log') }}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('task_flow.index') }}">
-                    Task Flow
+                    {{ __('common.Task Flow') }}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('user_manage.index') }}">
-                    User Manage
+                    {{ __('common.User Manage') }}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('user_role.index') }}">
-                    User Role
+                    {{ __('common.User Role') }}
                 </a>
             </li>
         </ul>

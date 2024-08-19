@@ -13,8 +13,13 @@ return new class extends Migration
     {
         Schema::create('task_flow_steps', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('task_flow_template_id')->constrained('task_flow_template');
-            $table->foreignId('to_role')->constrained('user_roles');
+
+            $table->unsignedBigInteger('task_flow_template_id')->nullable();
+            $table->foreign('task_flow_template_id')->references('id')->on('task_flow_templates');
+
+            $table->unsignedBigInteger('to_role')->nullable();
+            $table->foreign('to_role')->references('id')->on('user_roles');
+            
             $table->integer('order');
             $table->boolean('sendEmailNotification');
             $table->string('descript');

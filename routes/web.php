@@ -58,7 +58,10 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('tasks', TaskController::class);
     Route::post('task_cancel', [TaskController::class,'task_cancel'])->name('task_cancel');
     Route::get('get_task_assign', [TaskController::class,'get_task_assign'])->name('get_task_assign');
+    Route::post('update_task_note', [TaskController::class,'update_task_note'])->name('update_task_note');
+    Route::post('update_task_note_final', [TaskController::class,'update_task_note_final'])->name('update_task_note_final');
 
+    
 
     //file controller
     Route::post('download_file/{file_path}', [FilesController::class, 'download_file'])->where('file_path', '.*') ->name('download_file');

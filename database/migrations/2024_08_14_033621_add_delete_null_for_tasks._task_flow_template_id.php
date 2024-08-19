@@ -15,6 +15,7 @@ return new class extends Migration
         Schema::table('tasks', function (Blueprint $table) {
             // 檢查 'task_flow_template_id' 欄位是否存在
             if (Schema::hasColumn('tasks', 'task_flow_template_id')) {
+                $table->dropForeign(['task_flow_template_id']);
                 $table->dropColumn('task_flow_template_id');
             }
             

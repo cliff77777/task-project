@@ -6,6 +6,9 @@
         @if ($errors->any())
             <div class="alert alert-danger">
                 <ul>
+                    @foreach ($success->all() as $msg)
+                        <li>{{ $msg }}</li>
+                    @endforeach
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
                     @endforeach

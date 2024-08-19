@@ -61,4 +61,8 @@ class TaskFlowSteps extends Model
         return $this->role ? $this->role->role_name : null;
     }
 
+    public function role_to_user(){
+        return $this->hasMany(User::class, 'role', 'to_role');
+    }
+
 }

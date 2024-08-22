@@ -48,7 +48,10 @@ class LoginController extends Controller
     {
 
         $view=$this->CheckMailVerifyForView($request);
-        Log::debug('$view'.$view);
+        Log::debug(['view'=>$view]);
+        if(session('error')){
+            return view($view);
+        }
 
         return redirect($view);
     }

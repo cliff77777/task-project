@@ -24,7 +24,7 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>會員帳號</th>
+                    <th>使用者帳號</th>
                     <th>創建時間</th>
                     <th>權限</th>
                     <th>操作</th>

@@ -64,10 +64,11 @@ class TaskPolicy
         return $user->role == '1';
     }
 
-    public function edit(User $user): bool
+    public function edit(User $user, Task $task): bool
     {
         // 只有具有 'admin' 或 'manager' 角色的用戶可以創建任務
-        return $user->role == '1' || $user->role == '1';
+        // config("status_code.$type.$key");
+        return $user->role == '2' || $user->id == $task->created_by;
     }
 
     /**

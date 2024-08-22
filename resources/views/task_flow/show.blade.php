@@ -18,12 +18,12 @@
                 <input type="text" class="form-control w-25" value="{{ $template->creator->name }}" readonly>
             </div>
 
-            <div class="mb-2">
+            {{-- <div class="mb-2">
                 <label for="task_flow_name" class="form-label">
                     <h4>最後更新人:</h4>
                 </label>
                 <input type="text" class="form-control w-25" value="{{ $template->updater->name }}" readonly>
-            </div>
+            </div> --}}
 
             <h4>
                 <p><strong>步驟詳情 </strong></p>

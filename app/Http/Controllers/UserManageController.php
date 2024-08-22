@@ -61,7 +61,7 @@ class UserManageController extends Controller
             $user->password=$request->password;
             $user->role=$request->role;
             // 創建訪問令牌
-            $user->createToken('YourAppName')->accessToken;
+            // $user->createToken('YourAppName')->accessToken;
             $user->save();
             // 寄出信箱驗證信
             $user->sendEmailVerificationNotification();

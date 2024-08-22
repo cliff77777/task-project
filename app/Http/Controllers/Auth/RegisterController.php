@@ -79,8 +79,10 @@ class RegisterController extends Controller
         $user->email=$data['email'];
         $user->password=$data['password'];
 
+        $user->save();
+
         // 創建訪問令牌
-        $user->createToken('YourAppName')->accessToken;
+        // $user->createToken('YourAppName')->accessToken;
 
         return $user;
     }

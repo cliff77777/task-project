@@ -25,9 +25,9 @@
     <div id="app">
         @include('layouts.navbar')
         <div class="row">
-            @auth
+            @if (Auth::check() && Auth::user()->hasVerifiedEmail())
                 @include('layouts.sidebarMenu')
-            @endauth
+            @endif
             @yield('content')
             <script src="{{ mix('js/app.js') }}"></script>
             @stack('scripts')

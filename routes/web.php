@@ -44,7 +44,7 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->midd
 Route::get('/register', [RegisterController::class, 'index'])->name('register.index');
 Route::post('/register', [RegisterController::class, 'register'])->name('register');
 
-//emial
+//email
 Route::post('/email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
 
 Route::middleware(['auth'])->group(function () {

@@ -70,6 +70,8 @@
 
                 </div>
 
+                <input type="text" name="task_id" value="{{ $task->id }}" hidden>
+
                 @if (!empty($task->files))
                     <h4>已上傳檔案</h4>
                     @foreach ($task->files as $file)

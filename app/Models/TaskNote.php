@@ -37,6 +37,11 @@ class TaskNote extends BaseModel
         return $this->belongsTo(TaskFlowSteps::class,'task_flow_step_id');
     }
 
+    public function assign_to()
+    {
+        return $this->belongsTo(User::class,'assign_to');
+    }
+
     public function create_for_task_flow_step($task_folw_steps,$assigned_to,$task_id){
         // dd($assigned_to);
         foreach($task_folw_steps as $key=>$step){
@@ -44,6 +49,7 @@ class TaskNote extends BaseModel
 
             $task_note->task_id = $task_id;
 
+            //只有第一步驟需要寫入assigned_to
             if($step['order']==1){
                 $task_note->assign_to = $assigned_to;
             }
@@ -69,6 +75,7 @@ class TaskNote extends BaseModel
         }
         return $response;
     }
+
     static function get_task_next_step($task_id){
         //找task_notes table 尚未完成的優先筆，沒有任表尚未完成則回傳已完成的最後一筆
         $response=TaskNote::where('status',0)->where('task_id',$task_id)->orderby('step','asc')->first();

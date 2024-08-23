@@ -12,6 +12,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use App\Services\FileService;
+use App\Services\MailService;
+
 use Illuminate\Support\Facades\Storage;
 
 
@@ -19,13 +21,17 @@ use Illuminate\Support\Facades\Storage;
 class TaskController extends Controller
 {
     protected $fileService;
+    protected $mailService;
 
 
     public function __construct(
-        FileService $fileService
+        FileService $fileService,
+        MailService $mailService
     )
     {
         $this->fileService = $fileService;
+        $this->mailService = $mailService;
+
     }
 
     public function index()
@@ -133,16 +139,27 @@ class TaskController extends Controller
                 Log::debug('Task update failed');
                 throw new \Exception('Task update failed');
             }
-            Log::debug('Task update success');
+            Log::info('Task update success');
 
             $get_task_steps=TaskFlowSteps::where('task_flow_template_id',$request->task_flow_template_id)->get();
+
+            // dd(['get_task_steps'=>$get_task_steps[0]['sendEmailNotification']]);
+
             if($get_task_steps->isNotEmpty()){
                 $task_note=new TaskNote;
                 $result = $task_note->create_for_task_flow_step($get_task_steps,$request->assigned_to,$task->id);
+
+                //取第一步驟且需要寄送郵件sendEmailNotification ==1 
+                if($get_task_steps[0]['order']==1 && $get_task_steps[0]['sendEmailNotification']==1){
+                    $data=$request->all();
+                    $this->mailService->sendNotificationMail('sendEmailNotification_first',$data,$data['assigned_to']);
+                }
+
                 if( $result == "success" && $request->hasFile('file')){
                     $file = $request->file('file');
                     $this->check_file($file,$task,true);
                 }
+
             }
         });
         return redirect()->route('tasks.index')->with('success', '工作單已更新');
@@ -239,15 +256,18 @@ class TaskController extends Controller
                 "status"=>$data['status'],
                 "updated_by"=>Auth::id()
             ]);
-            //step有完成才做下步驟更新
+            //step有完成才做下步驟更新，最後一不不會有assign_next
             if($data['status']==1 && isset($data['assign_next'])){
+                //取得下一步驟的step
                 $task_next_step= TaskNote::get_task_next_step($data['task_id']);
-                if(!empty($task_next_step)){
                     TaskNote::where('id',$task_next_step->id)->update([
                         "assign_to"=>$data['assign_next'],
                         "updated_by"=>Auth::id()
                     ]);
-                }
+                    $check_task_step_email=TaskFlowSteps::where('id',$task_next_step->task_flow_step_id);
+                    if($check_task_step_email['sendEmailNotification']==1){
+                        $this->mailService->sendNotificationMail('sendEmailNotification',$data,$data['assign_next']);
+                    }
             }
         });
 

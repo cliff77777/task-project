@@ -15,13 +15,10 @@
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
     <!-- Scripts -->
-    <link rel="stylesheet" href="{{ mix('css/app.css') }}">
-
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
 <body>
-    <script src="{{ asset('js/jquery.min.js') }}"></script>
-
     <div id="app">
         @include('layouts.navbar')
         <div class="row">
@@ -29,7 +26,7 @@
                 @include('layouts.sidebarMenu')
             @endif
             @yield('content')
-            <script src="{{ mix('js/app.js') }}"></script>
+            @vite(['resources/js/app.js'])
             @stack('scripts')
         </div>
     </div>

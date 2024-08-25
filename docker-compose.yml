@@ -1,13 +1,10 @@
-version: "3.8"
-
 services:
     app:
-        container_name: project
         build:
             context: .
             dockerfile: Dockerfile
         ports:
-            - "8000:80"
+            - "8000:80" # Laravel 應用通過 8000 端口暴露
         volumes:
             - .:/var/www/html
         environment:
@@ -17,11 +14,25 @@ services:
             - QUEUE_CONNECTION=database
         depends_on:
             - db
+            - vite
+        networks:
+            - app-network
+
+    vite:
+        image: node:16-alpine
+        working_dir: /var/www/html
+        volumes:
+            - .:/var/www/html
+        command: ["npm", "run", "dev"]
+        ports:
+            - "3000:3000" # Vite 開發伺服器暴露到 3000 端口
+        networks:
+            - app-network
+        environment:
+            - CHOKIDAR_USEPOLLING=true # 使 Vite 的文件監視在 Docker 中正常工作
 
     db:
         image: mysql:8.0
-        container_name: mysql
-        restart: unless-stopped
         environment:
             MYSQL_DATABASE: laravel
             MYSQL_USER: laraveluser
@@ -30,13 +41,21 @@ services:
         volumes:
             - dbdata:/var/lib/mysql
         ports:
-            - "3306:3306"
+            - "3306:3306" # MySQL 端口
+        networks:
+            - app-network
+        restart: unless-stopped
 
     adminer:
         image: adminer
-        container_name: adminer-container
         ports:
-            - "8080:8080"
+            - "8080:8080" # Adminer 通過 8080 端口暴露
+        networks:
+            - app-network
 
 volumes:
     dbdata:
+
+networks:
+    app-network:
+        driver: bridge

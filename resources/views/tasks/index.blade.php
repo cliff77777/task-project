@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+    <div class="col-md-11 ms-sm-auto col-lg-11 px-md-4">
         <div class="container mt-5">
             @if (session('success'))
                 <div id="successAlert" class="alert alert-success alert-dismissible fade show" role="alert">

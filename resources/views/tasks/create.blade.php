@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+    <div class="col-md-11 ms-sm-auto col-lg-11 px-md-4">
         <h1 class="my-4">新增工作單</h1>
         <form action="{{ route('tasks.store') }}" method="POST">
             @csrf

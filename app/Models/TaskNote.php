@@ -42,6 +42,12 @@ class TaskNote extends BaseModel
         return $this->belongsTo(User::class,'assign_to');
     }
 
+    public function creator()
+    {
+        
+        return $this->belongsTo(User::class,'created_by');
+    }
+
     public function create_for_task_flow_step($task_folw_steps,$assigned_to,$task_id){
         // dd($assigned_to);
         foreach($task_folw_steps as $key=>$step){

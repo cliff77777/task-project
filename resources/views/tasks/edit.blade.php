@@ -3,7 +3,7 @@
 @section('content')
     {{-- {{ dd($assign_user) }} --}}
     @can('edit', $task)
-        <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-5">
+        <div class="col-md-11 ms-sm-auto col-lg-11 px-md-4 mt-5">
             <h1>Edit Task</h1>
             <form action="{{ route('tasks.update', $task->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf

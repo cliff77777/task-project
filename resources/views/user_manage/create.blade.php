@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+    <div class="col-md-11 ms-sm-auto col-lg-11 px-md-4">
         <h1 class="my-4">新增使用者</h1>
         @if ($errors->any())
             <div class="alert alert-danger">

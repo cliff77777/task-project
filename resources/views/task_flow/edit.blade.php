@@ -2,7 +2,7 @@
 
 @section('content')
     {{-- {{ dd($template) }} --}}
-    <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+    <div class="col-md-11 ms-sm-auto col-lg-11 px-md-4">
         <h1 class="my-4">編輯任務流程</h1>
         <form action="{{ route('task_flow.update', $template['id']) }}" method="POST">
             @csrf

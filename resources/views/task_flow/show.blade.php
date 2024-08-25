@@ -1,36 +1,32 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 ">
-        <h1 class="my-4">流程詳情</h1>
+    <div class="col-md-11  col-lg-11 px-md-4 ">
         <div class="mb-4">
-            <div class="mb-2">
-                <label for="task_flow_name" class="form-label">
-                    <h4>流程名稱:</h4>
-                </label>
-                <input type="text" class="form-control w-25" value="{{ $template->task_flow_name }}" readonly>
+            <div class="mx-auto w-75">
+                <h1 class="my-4 text-center">流程詳情</h1>
+
+                <div class="mb-2">
+                    <label for="task_flow_name" class="form-label">
+                        <h4>流程名稱:</h4>
+                    </label>
+                    <input type="text" class="form-control w-25" value="{{ $template->task_flow_name }}" readonly>
+                </div>
+
+                <div class="mb-2">
+                    <label for="task_flow_name" class="form-label">
+                        <h4>創建人:</h4>
+                    </label>
+                    <input type="text" class="form-control w-25" value="{{ $template->creator->name }}" readonly>
+                </div>
             </div>
 
-            <div class="mb-2">
-                <label for="task_flow_name" class="form-label">
-                    <h4>創建人:</h4>
-                </label>
-                <input type="text" class="form-control w-25" value="{{ $template->creator->name }}" readonly>
-            </div>
-
-            {{-- <div class="mb-2">
-                <label for="task_flow_name" class="form-label">
-                    <h4>最後更新人:</h4>
-                </label>
-                <input type="text" class="form-control w-25" value="{{ $template->updater->name }}" readonly>
-            </div> --}}
-
-            <h4>
+            <h4 class="mx-auto w-75">
                 <p><strong>步驟詳情 </strong></p>
             </h4>
             @foreach ($template->steps as $key => $step)
-                <div class="accordion" id="accordionPanelsStayOpenstep" style="max-width: 18rem;">
-                    <div class="accordion-item">
+                <div class="accordion" id="accordionPanelsStayOpenstep">
+                    <div class="accordion-item w-75 mx-auto">
                         <h2 class="accordion-header" id="panelsStayOpen-headingOne{{ $step->order }}">
                             <button class="accordion-button" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#panelsStayOpen-collapseOne{{ $step->order }}" aria-expanded="true"

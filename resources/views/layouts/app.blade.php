@@ -11,12 +11,16 @@
     <title>{{ config('app.name', 'Example') }}</title>
 
     <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.bunny.net">
+    <link rel="preconnect" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
     <!-- Scripts -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/css/datatable_yajra.css', 'resources/js/app.js'])
 </head>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 
 <body>
     <div id="app">
@@ -25,11 +29,12 @@
             @if (Auth::check() && Auth::user()->hasVerifiedEmail())
                 @include('layouts.sidebarMenu')
             @endif
+
             @yield('content')
-            @vite(['resources/js/app.js'])
-            @stack('scripts')
         </div>
     </div>
+    <!-- Stack for additional scripts -->
+    @stack('scripts')
 </body>
 
 </html>

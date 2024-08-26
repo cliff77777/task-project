@@ -2,21 +2,24 @@
 
 namespace App\Http\Controllers;
 
+// model
 use App\Models\Task;
 use App\Models\TaskFlowSteps;
 use App\Models\TaskNote;
 use App\Models\TaskFlowTemplate;
-
 use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
+
+// service
 use App\Services\FileService;
 use App\Services\MailService;
 
+//other
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-
-
+use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\DB;
 
 class TaskController extends Controller
 {
@@ -308,6 +311,48 @@ class TaskController extends Controller
             }
         });
         return redirect()->route('tasks.index')->with('success','Handle tsak success');
+
+    }
+
+    public function getTasksTable(Request $request){
+
+        if($request->json()){
+            $tasks = Task::with('creator', 'assignee')->where('valid','!=',Task::STATUS_INVALID);
+            
+            return Datatables::eloquent($tasks)
+            ->addColumn('subject',function($tasks){
+                return $tasks->subject;
+            })
+            ->addColumn('descript',function($tasks){
+                return $tasks->description;
+            })
+            ->addColumn('estimated_hours',function($tasks){
+                return $tasks->estimated_hours;
+            })
+            ->addColumn('name',function($tasks){
+                return $tasks->creator->name;
+            })
+            ->addColumn('assign_to',function($tasks){
+                
+                return ($tasks->assignee->name)??"<a href='route('task_cancel', $tasks->id)' class='btn btn-sm btn-info'>前往處理</a>";
+            })
+            ->addColumn('active',function($tasks){
+                //url
+                $handlelUrl = route('tasks.show', $tasks->id);
+                $editUrl = route('tasks.edit', $tasks->id);
+                $cancelUrl = route('task_cancel');
+                //btn
+                $handleButton="<a href='$handlelUrl' class='btn btn-sm btn-info'>前往處理</a>";
+                $editButton = "<a href='$editUrl' class='btn btn-sm btn-warning'>編輯</a>";
+                $cancelButton = 
+                    "<a onclick=\"confirmCancel(event, '$cancelUrl', $tasks->id)\" class='btn btn-sm btn-danger'>取消任務</a>" 
+                    ;
+                return $handleButton. ' ' .$editButton . ' ' . $cancelButton;
+            })
+            ->rawColumns(['active','assign_to'])
+            ->make(true);
+
+        }
 
     }
 

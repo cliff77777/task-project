@@ -34,6 +34,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::get('/',[HomeController::class, 'index'])->name('home.index');
 Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::get('user-tasks', [HomeController::class, 'getUserTasks'])->name('getUserTasks');
+
 
 //login logout 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login.index');//AuthenticatesUsers.showLoginForm
@@ -51,6 +53,7 @@ Route::middleware(['auth'])->group(function () {
     //user controller
     Route::resource('user_manage', UserManageController::class);
     Route::post('password_check',[ UserManageController::class,'password_check'])->name('password_check');
+    Route::get('getUserManageTable',[ UserManageController::class,'getUserManageTable'])->name('getUserManageTable');
 
 
 
@@ -60,6 +63,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('get_task_assign', [TaskController::class,'get_task_assign'])->name('get_task_assign');
     Route::post('update_task_note', [TaskController::class,'update_task_note'])->name('update_task_note');
     Route::post('update_task_note_final', [TaskController::class,'update_task_note_final'])->name('update_task_note_final');
+    Route::get('getTasksTable', [TaskController::class,'getTasksTable'])->name('getTasksTable');
 
     
 
@@ -70,12 +74,16 @@ Route::middleware(['auth'])->group(function () {
 
     //activity controller
     Route::get('activity_log', [ActivityLogController::class,'index'])->name('activity_log.index');
+    Route::get('getActivityTable', [ActivityLogController::class, 'getActivityTable'])->name('getActivityTable');
 
     //work flow
     Route::resource('task_flow',TaskFlowController::class);
+    Route::get('getTaskFlowTable', [TaskFlowController::class, 'getTaskFlowTable'])->name('getTaskFlowTable');
+
 
     //user role
     Route::resource('user_role',UserRoleController::class);
+    Route::get('getUserRoleTable',[UserRoleController::class,'getUserRoleTable'])->name('getUserRoleTable');
 
     
 

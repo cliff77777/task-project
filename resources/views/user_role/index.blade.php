@@ -21,45 +21,8 @@
         <div class="mb-4">
             <a href="{{ route('user_role.create') }}" class="btn btn-primary">新增權限</a>
         </div>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>權限名稱</th>
-                    <th>創建人</th>
-                    <th>權限控制</th>
-                    <th>操作</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($user_role as $role)
-                    <tr>
-                        <td>{{ $role->role_name }}</td>
-                        <td>{{ $role->username->name }}</td>
-                        <td>{{ json_encode($role->role_control) }}</td>
-                        <td>
-                            <a href="{{ route('user_role.show', $role->id) }}" class="btn btn-sm btn-info">詳情</a>
-                            {{-- @can('update', $task) --}}
-                            <a href="{{ route('user_role.edit', $role->id) }}" class="btn btn-sm btn-warning">權限編輯</a>
-                            {{-- <a onclick="confirmCancel(event, '{{ route('task_cancel') }}', {{ $task->id }})"
-                                    class="btn-sm btn-danger">取消任務
-                                </a> --}}
-                            {{-- @endcan --}}
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-        <div>
-            @if ($user_role->onFirstPage())
-                <!-- 如果在第一頁，不顯示上一頁按鈕 -->
-            @else
-                <a href="{{ $user_role->previousPageUrl() }}" class="btn btn-primary">上一頁</a>
-            @endif
 
-            @if ($user_role->hasMorePages())
-                <a href="{{ $user_role->nextPageUrl() }}" class="btn btn-primary">下一頁</a>
-            @endif
-        </div>
+        @include('datatable.user_role_table')
     @endsection
 
     @push('scripts')

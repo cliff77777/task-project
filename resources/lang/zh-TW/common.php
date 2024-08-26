@@ -18,6 +18,7 @@ return [
     "Task Flow"=>"任務流程",
     "User Manage"=>"使用者管理",
     "User Role"=>"使用者權限",
+    "Dashboard"=>"儀錶板"
 
 ];
 

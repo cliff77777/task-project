@@ -21,7 +21,7 @@
         <div class="mb-4">
             <a href="{{ route('user_manage.create') }}" class="btn btn-primary">新增使用者</a>
         </div>
-        <table class="table table-striped">
+        {{-- <table class="table table-striped">
             <thead>
                 <tr>
                     <th>使用者帳號</th>
@@ -38,12 +38,7 @@
                         <td>{{ $user->role_name }}</td>
                         <td>
                             <a href="{{ route('user_manage.show', $user->id) }}" class="btn btn-sm btn-info">詳情</a>
-                            {{-- @can('update', $task) --}}
                             <a href="{{ route('user_manage.edit', $user->id) }}" class="btn btn-sm btn-warning">使用者編輯</a>
-                            {{-- <a onclick="confirmCancel(event, '{{ route('task_cancel') }}', {{ $task->id }})"
-                                    class="btn-sm btn-danger">取消任務
-                                </a> --}}
-                            {{-- @endcan --}}
                         </td>
                     </tr>
                 @endforeach
@@ -59,7 +54,9 @@
             @if ($users->hasMorePages())
                 <a href="{{ $users->nextPageUrl() }}" class="btn btn-primary">下一頁</a>
             @endif
-        </div>
+        </div> --}}
+
+        @include('datatable.user_manage_table')
     @endsection
 
     @push('scripts')

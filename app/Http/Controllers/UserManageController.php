@@ -2,22 +2,34 @@
 
 namespace App\Http\Controllers;
 
+//model
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\UserRole;
 
 
+//service
+use App\Services\DataTableService;
+
+//other
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
-
-
-use function PHPSTORM_META\type;
+use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\DB;
 
 class UserManageController extends Controller
 {
+    protected $DataTableService;
+
+    // 依賴注入
+    public function __construct(DataTableService $DataTableService)
+    {
+        $this->DataTableService = $DataTableService;
+    }
+
     //
     public function index(){
         $users=User::paginate(10);
@@ -126,5 +138,29 @@ class UserManageController extends Controller
 
     }
 
-
+    public function getUserManageTable(Request $request){
+        if ($request->ajax()) {
+            $query = User::with('roleRelation'); // 使用查詢生成器或模型查詢
+            $columns = ['name', 'email', 'created_at'];
+    
+            // 使用 Service 處理 DataTable 的邏輯
+            return $this->DataTableService->buildDataTable($query, $columns, 'eloquent', function ($datatable) {
+                // 添加額外的自定義列
+                $datatable->addColumn('role_name', function ($query) {
+                    return $query->roleRelation->role_name;
+                });
+                $datatable->addColumn('active', function ($query) {
+                    $showUrl = route('user_manage.show', $query->id);
+                    $editUrl = route('user_manage.edit', $query->id);
+    
+                    // 生成按鈕
+                    $showButton = "<a href='$showUrl' class='btn btn-sm btn-info'>詳情</a>";
+                    $editButton = "<a href='$editUrl' class='btn btn-sm btn-warning'>編輯使用者</a>";
+    
+                    return $showButton . ' ' . $editButton;
+                })
+                ->rawColumns(['active']);
+            })->make(true); // 確保返回的是 JSON 格式
+        }
+    }
 }

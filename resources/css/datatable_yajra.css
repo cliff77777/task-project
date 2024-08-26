@@ -1,0 +1,49 @@
+/* 將搜尋欄移動到右側 */
+.dataTables_filter {
+    float: right;
+    text-align: right;
+}
+
+/* 調整搜尋輸入框的樣式 */
+.dataTables_filter input {
+    width: 200px;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+}
+
+/* 調整分頁按鈕的樣式 */
+.dataTables_paginate .paginate_button {
+    color: blue;
+    padding: 5px 10px;
+    margin: 2px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.dataTables_paginate .paginate_button:hover {
+    border: 1px solid #0056b3;
+}
+
+/* 將分頁頁碼置中顯示 */
+.dataTables_paginate {
+    text-align: center;
+    float: none !important;
+}
+
+/* 調整分頁按鈕間距 */
+.dataTables_paginate .paginate_button {
+    margin: 0 5px;
+}
+
+/* 顯示項目調整位置 */
+.dataTables_info {
+    float: right;
+    text-align: right;
+}
+
+.dataTables_length {
+    text-align: right;
+    margin-bottom: 10px;
+}

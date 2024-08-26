@@ -21,36 +21,7 @@
         <div class="mb-4">
             <a href="{{ route('task_flow.create') }}" class="btn btn-primary">新增任務流程</a>
         </div>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>流程名稱</th>
-                    <th>創建人</th>
-                    <th>流程步驟</th>
-                    <th>操作</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{-- {{ dd($task_flow_template) }} --}}
-                @foreach ($task_flow_template as $template)
-                    <tr>
-                        <td>{{ $template->task_flow_name }}</td>
-                        <td>{{ $template->creator->name }}</td>
-                        <td>{{ $template->steps_count }}</td>
-                        <td>
-                            <a href="{{ route('task_flow.show', $template->id) }}" class="btn btn-sm btn-info">詳細內容</a>
-                            {{-- @can('update', $task) --}}
-                            {{-- <a href="{{ route('task_flow.edit', $template->id) }}" class="btn btn-sm btn-warning">編輯</a> --}}
-                            <a onclick="confirmCancel(event, '{{ route('task_flow.destroy', $template->id) }}', {{ $template->id }})"
-                                class="btn btn-sm btn-danger">刪除流程
-                            </a>
-                            {{-- @endcan --}}
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-        {{ $task_flow_template->links() }}
+        @include('datatable.task_flow_table')
     @endsection
 
     @push('scripts')

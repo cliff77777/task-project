@@ -2,13 +2,18 @@
 
 namespace App\Http\Controllers;
 
+//model
 use App\Models\TaskFlowTemplate;
 use App\Models\UserRole;
 use App\Models\TaskFlowSteps;
-use Illuminate\Contracts\Validation\Validator;
+
+//other
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Contracts\Validation\Validator;
+use Yajra\DataTables\Facades\DataTables;
+
 
 
 
@@ -19,8 +24,8 @@ class TaskFlowController extends Controller
      */
     public function index()
     {
-        $task_flow_template=TaskFlowTemplate::withCount('steps')->paginate(10);
-        return view('task_flow.index',compact('task_flow_template'));
+        // $task_flow_template=TaskFlowTemplate::withCount('steps')->paginate(10);
+        return view('task_flow.index');
     }
 
     /**
@@ -110,5 +115,39 @@ class TaskFlowController extends Controller
                 return response()->json(['message' => 'An error occurred while delete task flow please try again later'], 500);
         }
         return response()->json(['message' => 'Delete task flow successfully'], 200);
+    }
+
+    public function getTaskFlowTable(Request $request){
+        if ($request->ajax()) {
+            $query = TaskFlowTemplate::with('creator')
+            ->select('task_flow_templates.*')
+            ->withCount('steps');
+
+            // 使用 DataTables 處理數據
+            return DataTables::eloquent($query)
+            ->addColumn('task_flow_name', function ($query) {
+                return $query->task_flow_name;
+            })
+            ->addColumn('name', function ($query) {
+                return $query->creator->name;
+            })
+            ->addColumn('steps_count', function ($query) {
+                return $query->steps_count;
+            })
+            ->addColumn('action', function ($row) {
+                $editUrl = route('task_flow.show', $row->id);
+                $deleteUrl = route('task_flow.destroy', $row->id);
+                $editButton = "<a href='$editUrl' class='btn btn-sm btn-info'>詳細內容</a>";
+                $deleteButton = 
+                // auth()->user()->can('update', $row) ? 
+                    "<a onclick=\"confirmCancel(event, '$deleteUrl', $row->id)\" class='btn btn-sm btn-danger'>刪除流程</a>" 
+                    // : ''
+                    ;
+                return $editButton . ' ' . $deleteButton;
+            })
+            ->rawColumns(['action']) // 確保 HTML 被正確渲染
+            ->make(true);
+        }
+
     }
 }

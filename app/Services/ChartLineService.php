@@ -1,11 +1,15 @@
 <?php
 namespace App\Services;
 
+//model
+use App\Models\TaskNote;
+
+
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
-use App\Models\TaskNote;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+
 
 
 

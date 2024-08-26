@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+//model
 use App\Models\UserRole;
 use App\Models\User;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\DB;
 
 
 
@@ -19,9 +22,9 @@ class UserRoleController extends Controller
     public function index()
     {
         //
-        $user_role = UserRole::with('username')->paginate(10);
+        // $user_role = UserRole::with('username')->paginate(10);
 
-        return view('user_role.index',compact('user_role'));
+        return view('user_role.index');
     }
 
     /**
@@ -117,5 +120,36 @@ class UserRoleController extends Controller
     public function destroy(UserRole $userRole)
     {
         //
+    }
+
+    public function getUserRoleTable(Request $request){
+        if($request->json()){
+            $user_role = UserRole::with('username')->get();
+            Log::info(['user_role'=>$user_role]);
+
+            return DataTables::collection($user_role)
+            ->addColumn('role_name',function($role){
+                return $role->role_name;
+            })
+            ->addColumn('creator',function($role){
+                return $role->username->name;
+            })
+            ->addColumn('created_at',function($role){
+                return $role->created_at;
+            })
+            ->addColumn('role_control',function($role){
+                return $role->role_control;
+            })
+            ->addColumn('active',function($role){
+                $showUrl=route('user_role.show', $role->id);
+                $editUrl=route('user_role.edit', $role->id);
+                $showButton = "<a href='$showUrl' class='btn btn-sm btn-info'>詳情</a>";
+                $editButton = "<a href='$editUrl' class='btn btn-sm btn-warning'>編輯使用者</a>";
+                return $showButton . ' ' . $editButton;
+            })
+            ->rawColumns(['active'])
+            ->make(true);
+        }
+
     }
 }

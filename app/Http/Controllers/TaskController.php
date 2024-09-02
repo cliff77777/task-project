@@ -333,8 +333,8 @@ class TaskController extends Controller
                 return $tasks->creator->name;
             })
             ->addColumn('assign_to',function($tasks){
-                
-                return ($tasks->assignee->name)??"<a href='route('task_cancel', $tasks->id)' class='btn btn-sm btn-info'>前往處理</a>";
+                $editUrl = route('tasks.edit', $tasks->id);
+                return ($tasks->assignee->name)??"<a href='$editUrl'>未指派</a>";
             })
             ->addColumn('active',function($tasks){
                 //url

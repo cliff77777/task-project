@@ -2,7 +2,7 @@
 
 ## 專案說明
 
--   本專案是使用 Laravel 10 開發的任務管理系統，前端視圖未使用 Laravel 的 Blade 模板，而是由 ChatGPT 協作設計畫面布局。
+-   本專案是使用 Laravel 10 開發的任務管理系統，前端視圖使用 Laravel 的 Blade 模板，是由 ChatGPT 協作設計畫面布局。
 
 -   使用技術:
 

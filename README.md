@@ -15,6 +15,22 @@
 -   Activity Log
 -   Vite
 
+## Task Project 架構
+
+```mermaid
+graph TD;
+Route-->Controller;
+Controller-->middleware_auth;
+middleware_auth-->AuthenticatesUsers;
+AuthenticatesUsers-->view;
+middleware_auth-->FileController-->view;
+middleware_auth-->HomeController-->view;
+middleware_auth-->TaskController-->view;
+middleware_auth-->TaskFlowController-->view;
+middleware_auth-->UserManageController-->view;
+middleware_auth-->UserRoleController-->view;
+```
+
 ## 使用者註冊流程
 
 -   使用 Laravel 的 RegistersUsers 控制器處理註冊與權限驗證。

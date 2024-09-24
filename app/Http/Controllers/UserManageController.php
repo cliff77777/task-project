@@ -28,6 +28,8 @@ class UserManageController extends Controller
     public function __construct(DataTableService $DataTableService)
     {
         $this->DataTableService = $DataTableService;
+        $this->middleware('auth');
+
     }
 
     //

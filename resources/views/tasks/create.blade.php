@@ -3,7 +3,7 @@
 @section('content')
     <div class="col-md-11 ms-sm-auto col-lg-11 px-md-4">
         <h1 class="my-4">新增工作單</h1>
-        <form action="{{ route('tasks.store') }}" method="POST">
+        <form action="{{ route('tasks.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="mb-3 col-md-3">
                 <label for="subject" class="form-label">主旨</label>

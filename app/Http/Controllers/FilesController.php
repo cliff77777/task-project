@@ -20,6 +20,8 @@ class FilesController extends Controller
         )
     {
         $this->fileService = $fileService;
+        $this->middleware('auth');
+
     }
 
     public function download_file($file_path,$disk='public'){
@@ -59,7 +61,16 @@ class FilesController extends Controller
         }
     }
 
-    public function upload_file(){
-        
+    public function upload_file($task_id,Request $request){
+        if($request->hasFile('file')){
+            $fileService = new FileService($request, 'file');
+            $file_path = $fileService->saveFileToTaskFile($request->file('file'), 'taskfile/'.$task_id,$task_id);
+            $task=Task::find($task_id);
+            $task->files()->saveMany($file_path);
+            if (is_array($file_path) && isset($file_path['error'])) {
+                return back()->withErrors($file_path['error']);
+            }
+        }
+        return redirect()->route('tasks.index')->with('success', '檔案已新增');
     }
 }

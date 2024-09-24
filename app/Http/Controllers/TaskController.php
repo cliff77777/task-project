@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 // model
 use App\Models\Task;
+use App\Models\TaskFile;
 use App\Models\TaskFlowSteps;
 use App\Models\TaskNote;
 use App\Models\TaskFlowTemplate;
@@ -34,6 +35,8 @@ class TaskController extends Controller
     {
         $this->fileService = $fileService;
         $this->mailService = $mailService;
+        $this->middleware('auth');
+
 
     }
 
@@ -67,7 +70,6 @@ class TaskController extends Controller
             'created_by' => Auth::id(),
         ]);
 
-
         if($request->hasFile('file')){
             $fileService = new FileService($request, 'file');
             $file_path = $fileService->saveFileToTaskFile($request->file('file'), 'taskfile/'.$task->id,$task->id);
@@ -93,8 +95,9 @@ class TaskController extends Controller
         $get_task_current_step =TaskNote::get_task_current_step($task_id);
         $get_task_next_step =TaskNote::get_task_next_step($task_id);
 
+        $get_task_file=TaskFile::where('task_id',$task_id)->get();
 
-        return view('tasks.show', compact('task',"task_note",'auth','get_task_current_step','get_task_next_step'));
+        return view('tasks.show', compact('task',"task_note",'auth','get_task_current_step','get_task_next_step','get_task_file'));
     }
 
 
@@ -267,7 +270,7 @@ class TaskController extends Controller
                         "assign_to"=>$data['assign_next'],
                         "updated_by"=>Auth::id()
                     ]);
-                    $check_task_step_email=TaskFlowSteps::where('id',$task_next_step->task_flow_step_id);
+                    $check_task_step_email=TaskFlowSteps::where('id',$task_next_step->task_flow_step_id)->first();
                     if($check_task_step_email['sendEmailNotification']==1){
                         $this->mailService->sendNotificationMail('sendEmailNotification',$data,$data['assign_next']);
                     }

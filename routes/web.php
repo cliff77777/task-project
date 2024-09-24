@@ -70,7 +70,7 @@ Route::middleware(['auth'])->group(function () {
     //file controller
     Route::post('download_file/{file_path}', [FilesController::class, 'download_file'])->where('file_path', '.*') ->name('download_file');
     Route::delete('delete_file/{file_path}', [FilesController::class, 'delete_file'])->where('file_path', '.*') ->name('delete_file');
-    Route::post('upload_file/{file_path}', [FilesController::class, 'upload_file'])->where('file_path', '.*') ->name('upload_file');
+    Route::post('upload_file/{file_path}', [FilesController::class, 'upload_file'])->where('task_id', '.*') ->name('upload_file');
 
     //activity controller
     Route::get('activity_log', [ActivityLogController::class,'index'])->name('activity_log.index');

@@ -24,8 +24,6 @@ class TaskPolicy
      */
     public function view(User $user, Task $task): bool
     {        
-        Log::info(["Policies"=>$task]);
-
         $result=false;
         $task->where('valid',1)->get();
         if($task||$user->role=1){
